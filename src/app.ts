@@ -13,9 +13,9 @@ createConnection ()
     router.get('/', async ctx => {
       ctx.body = {data:"你好！"}
     })
-    router.get('/login', async (ctx: Context) => {
-      const {account, password} = ctx.query
-      console.log(ctx.query)
+    router.post('/login', async (ctx: Context) => {
+      const {account, password} = ctx.request.body
+      console.log(ctx.request.body)
       console.log(account)
       console.log(password)
       const userRepository = getManager().getRepository(User)
