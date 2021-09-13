@@ -6,11 +6,11 @@ class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('int')
-    account: string;
+    @Column()
+    account: number;
     
-    @Column('int')
-    password: string;
+    @Column()
+    password: number;
 }
 
 export default User
