@@ -7,10 +7,10 @@ class User {
     id: number;
 
     @Column()
-    account: number;
+    account: string= '';
     
     @Column()
-    password: number;
+    password: string= '';
 }
 
 export default User
