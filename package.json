@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/HCYETY/Online-programming-platform_service#readme",
   "dependencies": {
+    "@types/koa-session": "^5.10.4",
     "@types/node": "^16.9.1",
     "install": "^0.13.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
+    "koa-session": "^6.2.0",
     "koa2-cors": "^2.0.6",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
