@@ -1,4 +1,23 @@
-## 项目文件简介
+## 项目模板的目录结构：
+```js
+├── README.md // 项目说明
+├── problem.md // 
+├── documents.md
+├── package.json
+├── tsconfig.json
+├── ormconfig.js // mysql数据库的相关配置
+├── img // 存放图片资源
+├── .gitignore
+└── src
+    ├── App.tsx // 根组件
+    ├── index.tsx // 项目入口文件
+    ├── style.less // 根组件样式
+    ├── index.html // 打包时的 HTML 模板
+    ├── api 
+    │   ├── index.ts  // 封装了 get 和 post 方法
+    │   ├── modules // 后续根据项目模块的划分，在这里添加接口
+    ├── pages // 项目业务组件
+```
 |序号|文件夹|描述|
 |:--:|:--:|:--:|
 |1|controllers|用于存放各种业务逻辑函数，如：处理接口请求|

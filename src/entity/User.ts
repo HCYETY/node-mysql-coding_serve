@@ -1,18 +1,21 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
 class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number = 0;
 
     @Column()
-    account: string= '';
+    account: string = '';
     
     @Column()
-    password: string= '';
+    password: string = '';
 
     @Column()
     session: string = '';
+
+    @Column()
+    interviewer: boolean;
 }
 
-export default User
+export default User;
