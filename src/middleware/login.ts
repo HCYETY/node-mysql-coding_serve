@@ -18,7 +18,7 @@ module.exports = async (ctx:Context, next:any) => {
         console.log(ctx.session.time)
         // 设置cookie
         ctx.cookies.set(
-          'account', account, {maxAge:3600000}
+          'account', account, {httpOnly: false, maxAge:3600000}
           )
 
         // console.log('响应头中的sessionid',ctx.response.header['set-cookie'])
@@ -41,6 +41,7 @@ module.exports = async (ctx:Context, next:any) => {
       const newUser = new User()
       newUser.account = account, newUser.password = password
       await userRepository.save(newUser)
+      console.log(newUser)
       ctx.body = {status:true, message:'注册成功', data:newUser}
     } else{
       ctx.body = {status:false, message:'用户已存在，请注册新的邮箱'}
