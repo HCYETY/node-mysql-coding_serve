@@ -15,7 +15,7 @@ class User {
     session: string = '';
 
     @Column()
-    interviewer: boolean;
+    interviewer: boolean = false;
 }
 
 export default User;

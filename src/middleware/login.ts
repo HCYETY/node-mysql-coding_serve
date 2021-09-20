@@ -27,16 +27,16 @@ module.exports = async (ctx:Context, next:any) => {
       console.log(session);
       // 设置cookie
       ctx.cookies.set(
-        'session', session, {httpOnly: false, maxAge:3600000}
+        'session', session, { httpOnly: false, maxAge: 3600000 }
       )
 
-      ctx.body = {message:'登录成功', isLogin: true};
+      ctx.body = { message: '登录成功', isLogin: true, identity: saveUsers.interviewer };
     } else {
-      ctx.body = {message:'用户名或密码错误', isLogin: false};
+      ctx.body = { message: '用户名或密码错误', isLogin: false };
       return;
     }
   } else {
-    ctx.body = {message:'该用户名不存在', isLogin: false};
+    ctx.body = { message: '该用户名不存在', isLogin: false };
     return;
   }
 }
