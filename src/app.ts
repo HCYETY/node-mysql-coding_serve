@@ -3,11 +3,15 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import cors from 'koa2-cors';
 import { createConnection } from "typeorm";
+import { ORIGINIP } from './util/const';
 
-const authenticate = require('./middleware/authenticate');
-const login = require('./middleware/login');
-const register = require('./middleware/register');
-const home = require('./middleware/home');
+const authenticate = require('./middleware/authenticate.ts');
+const login = require('./middleware/login.ts');
+const register = require('./middleware/register.ts');
+const paper = require('./middleware/paper/showPaper.ts');
+// const addPaper = require('./middleware/paper/addPaper.ts');
+const deletePaper = require('./middleware/paper/deletePaper.ts');
+// const modifyPaper = require('./middleware/paper/modifyPaper.ts');
 
 createConnection ()
   .then(() => {
@@ -16,9 +20,9 @@ createConnection ()
 
     // 处理cookie跨域
     const corsOptions ={
-      origin:'http://localhost:3000', 
-      credentials:true,
-      optionSuccessStatus:200
+      origin: ORIGINIP, 
+      credentials: true,
+      optionSuccessStatus: 200
     }
     app.use(cors(corsOptions));
     // 处理 post 请求的参数
@@ -28,12 +32,15 @@ createConnection ()
     // 匹配接口
     router.post('/login', login);
     router.post('/register', register);
-    router.post('/submit', home);
+    router.post('/paper', paper);
+    // router.post('/add_paper', addPaper);
+    router.post('/delete_paper', deletePaper);
+    // router.post('/modify_paper', modifyPaper);
     // 组装匹配好的路由，返回一个合并好的中间件
     app.use(router.routes());
     
-    app.listen(3001, () => {
-      console.log('网站服务器启动成功，请访问 http://localhost:3001');
+    app.listen(8080, () => {
+      console.log('网站服务器启动成功，请访问 http://120.79.193.126:8080');
     })
   })
-  .catch(error => console.log('TypeOrm连接失败', error))
+  .catch((error: any) => console.log('TypeOrm连接失败', error))

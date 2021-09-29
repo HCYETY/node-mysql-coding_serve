@@ -18,8 +18,8 @@ module.exports = async (ctx:Context, next:any) => {
       newUser.interviewer = false;
     }
     await userRepository.save(newUser);
-    ctx.body = {status:true, message:'注册成功', data:newUser};
+    ctx.body = { status: true, message: '注册成功' };
   } else {
-    ctx.body = {status:false, message:'用户已存在，请注册新的邮箱'};
+    ctx.body = { status: false, message: '用户已存在，请注册新的邮箱' };
   }
 }
