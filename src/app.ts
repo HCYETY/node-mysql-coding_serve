@@ -30,12 +30,12 @@ createConnection ()
     // 根据登录状态设置登录拦截
     router.use(authenticate);
     // 匹配接口
-    router.post('/login', login);
-    router.post('/register', register);
-    router.post('/paper', paper);
-    // router.post('/add_paper', addPaper);
-    router.post('/delete_paper', deletePaper);
-    // router.post('/modify_paper', modifyPaper);
+    router.post('/api/login', login);
+    router.post('/api/register', register);
+    router.post('/api/paper', paper);
+    // router.post('/api/add_paper', addPaper);
+    router.post('/api/delete_paper', deletePaper);
+    // router.post('/api/modify_paper', modifyPaper);
     // 组装匹配好的路由，返回一个合并好的中间件
     app.use(router.routes());
     

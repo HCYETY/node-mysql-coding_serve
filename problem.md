@@ -10,7 +10,4 @@
 3. 在服务器运行`npm run dev`报错：SyntaxError: Cannot use import statement outside a module？
 > [解决方法](https://blog.csdn.net/weixin_43094085/article/details/114832738)
 
-4. Error: Cannot find module './util/const'或Error: Cannot find module './middleware/authenticate'?
-> []()
-
-5. pm2学习：[Linux CentOS + Nodejs + Koa部署vue项目](https://blog.csdn.net/lihefei_coder/article/details/102469510)
+4. pm2学习：[Linux CentOS + Nodejs + Koa部署vue项目](https://blog.csdn.net/lihefei_coder/article/details/102469510)
