@@ -12,8 +12,6 @@ export default async (ctx:Context) => {
     console.log(deletePaper)
     console.log('试卷已删除')
   }
-  const resPaper = await paperRepository.find();
-  console.log(resPaper)
 
-  ctx.body = { msg: '试卷已删除', data: resPaper }
+  ctx.body = { msg: '试卷已删除' }
 }

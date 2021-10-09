@@ -5,12 +5,12 @@ import User from '../entity/User';
 
 export default async (ctx:Context, next:any) => {
   try{
-    const { email, cypher } = ctx.request.body;
+    const { account, password } = ctx.request.body;
     const userRepository = getManager().getRepository(User);
-    const saveUsers = await userRepository.findOne({where: {email: email}});
+    const saveUsers = await userRepository.findOne({where: {account}});
   
     if (saveUsers) {
-      if (cypher === saveUsers.cypher) {
+      if (account === saveUsers.account && password === saveUsers.password) {
         // 设置20位数的 session 随机数，同时和查找到的用户信息一并存进数据库中
         const session = generateMixed(20)
         saveUsers.session = session;
@@ -22,11 +22,11 @@ export default async (ctx:Context, next:any) => {
   
         ctx.body = { message: '登录成功', isLogin: true, identity: saveUsers.interviewer };
       } else {
-        ctx.body = { message: '邮箱账号或密码错误', isLogin: false };
+        ctx.body = { message: '用户名或密码错误', isLogin: false };
         return;
       }
     } else {
-      ctx.body = { message: '该邮箱不存在', isLogin: false };
+      ctx.body = { message: '该用户名不存在', isLogin: false };
       return;
     }
   } catch{(err: any) => ctx.body = {err}}; 

@@ -6,7 +6,6 @@ import { createConnection } from "typeorm";
 
 import { ORIGINIP } from './config/const';
 import authenticate from './middleware/authenticate';
-import email from './middleware/email';
 import login from './middleware/login';
 import register from './middleware/register';
 import paper from './middleware/paper/showPaper';
@@ -31,7 +30,6 @@ createConnection ()
     // 根据登录状态设置登录拦截
     router.use(authenticate);
     // 匹配接口
-    router.post('/api/email', email);
     router.post('/api/login', login);
     router.post('/api/register', register);
     router.post('/api/paper', paper);

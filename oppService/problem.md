@@ -11,14 +11,3 @@
 > [解决方法](https://blog.csdn.net/weixin_43094085/article/details/114832738)
 
 4. pm2学习：[Linux CentOS + Nodejs + Koa部署vue项目](https://blog.csdn.net/lihefei_coder/article/details/102469510)
-5. 启动 nodejs 项目报错？
-```
-import Koa from 'koa';
-^^^^^^
-
-SyntaxError: Cannot use import statement outside a module
-```
-据说方法是在 package.json 中加入 "type": "module" ，然而我这样做之后又报了另一个错误：Unknown file extension ".ts" ？这时搜了下文章，解决方法是 删除 "type": "module" 。我懵了？？？？？
-
-6. 引入文件报错：Could not find a declaration file for module '../../sendmail.js'？
-

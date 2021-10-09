@@ -1,0 +1,1 @@
+export const ORIGINIP: string = 'http://localhost:3000';

@@ -2,24 +2,23 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import User from '../entity/User';
 
-module.exports = async (ctx:Context, next:any) => {
-  const { account, password, identity } = ctx.request.body;
+export default async (ctx:Context, next:any) => {
+  const { email, cypher, captcha, identity } = ctx.request.body;
   const userRepository = getManager().getRepository(User);
-  const saveUsers = await userRepository.findOne({where: {account}});
-  const newUser = new User();
-  console.log('前端请求', ctx.request.body)
-  console.log(identity)
+  const saveUsers = await userRepository.findOne({where: {captcha: captcha}});
 
   if (saveUsers === undefined) {
-    newUser.account = account, newUser.password = password;
+    ctx.body = { status: false, message: '验证码输入错误，请重新输入' };
+  } else if (saveUsers.captcha !== undefined && !saveUsers.email) {
+    saveUsers.email = email, saveUsers.cypher = cypher;
     if (identity && identity === 1) {
-      newUser.interviewer = true;
+      saveUsers.interviewer = true;
     } else {
-      newUser.interviewer = false;
+      saveUsers.interviewer = false;
     }
-    await userRepository.save(newUser);
+    await userRepository.save(saveUsers);
     ctx.body = { status: true, message: '注册成功' };
-  } else {
-    ctx.body = { status: false, message: '用户已存在，请注册新的邮箱' };
+  } else if (saveUsers.email) {
+    ctx.body = { status: false, message: '邮箱已存在，请注册新的邮箱' };
   }
 }

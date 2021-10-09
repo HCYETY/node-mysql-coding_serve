@@ -10,11 +10,11 @@ export default async (ctx:Context, next:any) => {
     const userRepository = getManager().getRepository(User);
     // 根据 cookie 查看数据库中是否有 session 随机数
     const saveUser = await userRepository.findOne({where: {session: cookie}});
-    var key = saveUser ? saveUser.session : false;
+    var key = saveUser.session;
   }
 
   // 若用户请求登录或注册，则可以通过
-  const dontNeedCheck = ['/api/login', '/api/register', '/api/email'];
+  const dontNeedCheck = ['/api/login', '/api/register'];
   if (dontNeedCheck.indexOf(ctx.url) > -1) {
     await next();
     return;
