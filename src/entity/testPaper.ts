@@ -32,4 +32,7 @@ export default class test_paper {
 
   @Column()
   check: boolean = false;
+
+  @Column("simple-array")
+  candidate: string[] = [""];
 }

@@ -3,22 +3,22 @@ import { getManager } from "typeorm";
 import { paperStatus} from '../../config/types';
 import testPaper from '../../entity/testPaper';
 import nodemail from '../../../sendmail.js';
+import { nowTime } from '../../config/utils';
 
 export default async (ctx:Context) => {
   console.log(ctx.request.body);
   const req = ctx.request.body;
   const paperRepository = getManager().getRepository(testPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
+  const paperNum = req.names && req.names.length ? req.names.length + 1 : 1;
   const time_begin = req.time[0].slice(0, 10);
   const time_end = req.time[1].slice(0, 10);
   // 获取当前时间；如果有位数为 1 的，则在前面补 0
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = (now.getMonth() + 1).toString().padStart(2,'0');
-  const day = now.getDate().toString().padStart(2,'0');
-  const nowTime = year + '-' + month + '-' + day;
-  console.log(time_begin, typeof time_begin)
-  console.log(time_begin === nowTime)
+  const nowtime = nowTime();
+  console.log(time_begin, typeof time_begin);
+  console.log(time_end, typeof time_end);
+  console.log(time_begin === nowtime);
+  // 根据候选人邮箱发送邮件通知
   for (let ret of ctx.request.body.candidate) {
     const mail = {
       from: '1164939253@qq.com',
@@ -33,14 +33,14 @@ export default async (ctx:Context) => {
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
     const newPaper = new testPaper();
-    const paperNum = req.names && req.names.length ? req.names.length + 1 : 1;
     newPaper.paper = req.paper;
     newPaper.level = req.level;
     newPaper.tags = req.tags;
-    newPaper.time = time_begin + '~' + time_end;
-    newPaper.paperNum = paperNum;
     newPaper.check = req.check === 1 ? true : false;
-    newPaper.status = time_begin === nowTime ? paperStatus.ing : paperStatus.nobegin;
+    newPaper.candidate = req.candidate;
+    newPaper.paperNum = paperNum;
+    newPaper.time = time_begin + '~' + time_end;
+    newPaper.status = time_begin === nowtime ? paperStatus.ing : paperStatus.nobegin;
     // newPaper.remaining_time = (time_end - time_begin).toString();
     console.log(newPaper.tags)
     await paperRepository.save(newPaper);
