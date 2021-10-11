@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { paperStatus} from '../config/types';
+import { paperStatus } from '../config/types';
 
 @Entity()
 export default class test_paper {
@@ -13,9 +13,6 @@ export default class test_paper {
   tags: string[] = [""];
 
   @Column()
-  level: string = '';
-  
-  @Column()
   pass?: number = 0;
   
   @Column()
@@ -27,12 +24,15 @@ export default class test_paper {
   @Column()
   remaining_time: string = '';
   
-  @Column()
-  status: string = paperStatus.nobegin;
+  // @Column()
+  // status: string = paperStatus.nobegin;
 
   @Column()
   check: boolean = false;
 
   @Column("simple-array")
-  candidate: string[] = [""];
+  candidate?: string[] = [""];
+
+  // @Column("longtext")
+  // topic: any = 'ff ';
 }
