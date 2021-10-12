@@ -22,3 +22,7 @@ SyntaxError: Cannot use import statement outside a module
 
 6. 引入文件报错：Could not find a declaration file for module '../../sendmail.js'？
 
+7. ts 项目中使用 antd4 Table 组件报错：类型“IntrinsicAttributes & DrawerProps & { children?: ReactNode; }”上不存在属性“extra”？
+```
+
+```

@@ -21,27 +21,27 @@ export default async (ctx:Context) => {
   // 求出日期之间的天数
   const remaining_time = getDays(timeBegin, timeEnd);
   // 根据候选人邮箱发送邮件通知
-  for (let ret of ctx.request.body.candidate) {
-    const mail = {
-      from: '1164939253@qq.com',
-      to: ret,
-      subject: '在线编程笔试平台',
-      text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
-    };
-    nodemail(mail);
+  if (ctx.request.body.candidate) {
+    for (let ret of ctx.request.body.candidate) {
+      const mail = {
+        from: '1164939253@qq.com',
+        to: ret,
+        subject: '在线编程笔试平台',
+        text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
+      };
+      nodemail(mail);
+    }
   }
   
   let res;
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
     const newPaper = new testPaper();
-    newPaper.paper = req.paper;
-    newPaper.tags = req.tags;
+    newPaper.paper = req.paper ? req.paper : null;
     newPaper.check = req.check === 1 ? true : false;
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.paperNum = paperNum;
     newPaper.time = timeBegin + '~' + timeEnd;
-    // newPaper.topic = req.topic;
     newPaper.remaining_time = result === true  ? '还剩' + remaining_time + '天' : '试卷未开放' ;
     await paperRepository.save(newPaper);
     res = { msg: '试卷新建成功，并已通过邮件告知候选人相关信息', status: true};

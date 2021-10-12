@@ -24,15 +24,9 @@ export default class test_paper {
   @Column()
   remaining_time: string = '';
   
-  // @Column()
-  // status: string = paperStatus.nobegin;
-
   @Column()
   check: boolean = false;
 
   @Column("simple-array")
   candidate?: string[] = [""];
-
-  // @Column("longtext")
-  // topic: any = 'ff ';
 }
