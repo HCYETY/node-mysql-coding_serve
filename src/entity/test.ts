@@ -1,25 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, } from 'typeorm';
+import testPaper from '../entity/testPaper';
 
-@Entity()
+@Entity({ database: "itembank" })
 export default class test {
   @PrimaryGeneratedColumn()
-  key: number = 0;
+  key: number;
 
   @Column()
   num: number = 0;
 
   @Column()
-  testName: string = '';
+  testName: string;
+  
+  @Column("longtext")
+  test: string;
 
-  // @Column("longtext")
-  // test: 
+  @ManyToOne(type => testPaper, paper => paper.tests)
+  @JoinColumn({ name: 'test_to_paper' })
+  paper: testPaper;
+
+  @Column("longtext")
+  answer: string;
 
   @Column("simple-array")
-  testTags: string[] = [""];
+  tags: string[];
 
   @Column()
-  level: string = '';
+  level: string;
 
   @Column()
-  point: number = 0;
+  point: number;
 }

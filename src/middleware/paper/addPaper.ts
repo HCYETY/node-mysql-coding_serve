@@ -4,6 +4,7 @@ import { paperStatus} from '../../config/types';
 import testPaper from '../../entity/testPaper';
 import nodemail from '../../../sendmail.js';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
+// import { loginResponse } from '../../config/class';
 
 export default async (ctx:Context) => {
   console.log(ctx.request.body);
@@ -33,7 +34,7 @@ export default async (ctx:Context) => {
     }
   }
   
-  let res;
+  let res = null;
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
     const newPaper = new testPaper();
@@ -44,6 +45,7 @@ export default async (ctx:Context) => {
     newPaper.time = timeBegin + '~' + timeEnd;
     newPaper.remaining_time = result === true  ? '还剩' + remaining_time + '天' : '试卷未开放' ;
     await paperRepository.save(newPaper);
+    // res = new loginResponse(200)
     res = { msg: '试卷新建成功，并已通过邮件告知候选人相关信息', status: true};
   } else {
     res = { msg: '该试卷已存在，请新建试卷', status: false};

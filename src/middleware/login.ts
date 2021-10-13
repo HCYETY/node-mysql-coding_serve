@@ -2,10 +2,11 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import { generateMixed } from '../config/utils';
 import User from '../entity/User';
+// import { loginResponse } from '../config/class';
 
 export default async (ctx:Context, next:any) => {
   try{
-    const { email, cypher } = ctx.request.body;
+    const { email, cypher } = ctx.request.body; 
     const userRepository = getManager().getRepository(User);
     const saveUsers = await userRepository.findOne({where: {email: email}});
   

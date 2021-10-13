@@ -2,20 +2,20 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import cors from 'koa2-cors';
-import { createConnection } from "typeorm";
+import { createConnections } from "typeorm";
 
 import { ORIGINIP } from './config/const';
 import authenticate from './middleware/authenticate';
 import email from './middleware/email';
 import login from './middleware/login';
 import register from './middleware/register';
-import test from './middleware/paper/test';
+import addTest from './middleware/paper/addTest';
 import paper from './middleware/paper/showPaper';
 import addPaper from './middleware/paper/addPaper';
 import deletePaper from './middleware/paper/deletePaper';
 import modifyPaper from './middleware/paper/modifyPaper';
 
-createConnection ()
+createConnections ()
   .then(() => {
     const app = new Koa();
     const router = new Router(); 
@@ -35,8 +35,8 @@ createConnection ()
     router.post('/api/email', email);
     router.post('/api/login', login);
     router.post('/api/register', register);
-    router.post('/api/test', test);
     router.post('/api/paper', paper);
+    router.post('/api/add_test', addTest);
     router.post('/api/add_paper', addPaper);
     router.post('/api/delete_paper', deletePaper);
     router.post('/api/modify_paper', modifyPaper);

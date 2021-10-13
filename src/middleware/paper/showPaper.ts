@@ -4,6 +4,7 @@ import testPaper from '../../entity/testPaper';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
 
 export default async (ctx:Context) => {
+  console.log('进来了哈哈哈哈')
   const paper = getManager().getRepository(testPaper);
   let show;
   if (ctx.request.body.paper) {
@@ -22,5 +23,5 @@ export default async (ctx:Context) => {
     console.log(show)
   }
 
-  ctx.body = {show}
+  ctx.body = { show }
 }
