@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, } from 'typeorm';
 import { paperStatus } from '../config/types';
 import test from '../entity/test';
 
@@ -11,7 +11,6 @@ export default class test_paper {
   paper: string = null;
 
   @OneToMany(type => test, test => test.paper)
-  @JoinColumn()
   tests: test[];
 
   @Column("simple-array")

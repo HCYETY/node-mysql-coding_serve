@@ -26,3 +26,8 @@ SyntaxError: Cannot use import statement outside a module
 ```
 
 ```
+
+8. 使用 typeorm 设计跨数据库的表约束，报错：外键约束错误？
+```
+QueryFailedError: ER_NO_REFERENCED_ROW_2: Cannot add or update a child row: a foreign key constraint fails (`itembank`.`test`, CONSTRAINT `FK_cf178041db2d954f037ccb0c1ec` FOREIGN KEY (`test_to_paper`) REFERENCES `fieldwork`.`test_paper` (`key`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+```

@@ -10,14 +10,14 @@ export default class test {
   num: number = 0;
 
   @Column()
-  testName: string;
+  testName: string = null;
   
   @Column("longtext")
   test: string;
 
   @ManyToOne(type => testPaper, paper => paper.tests)
-  @JoinColumn({ name: 'test_to_paper' })
-  paper: testPaper;
+  @JoinColumn()
+  paper: testPaper[];
 
   @Column("longtext")
   answer: string;
