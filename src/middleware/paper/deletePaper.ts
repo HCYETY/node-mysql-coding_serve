@@ -1,11 +1,11 @@
 import { Context } from 'koa';
 import { getManager } from "typeorm";
-import testPaper from '../../entity/testPaper';
+import TestPaper from '../../entity/TestPaper';
 
 export default async (ctx:Context) => {
   console.log('删除试卷')
   console.log(ctx.request.body)
-  const paperRepository = getManager().getRepository(testPaper);
+  const paperRepository = getManager().getRepository(TestPaper);
   for (let num of ctx.request.body) {
     const deletePaper = await paperRepository.find({where: {paper: num}});
     await paperRepository.remove(deletePaper);

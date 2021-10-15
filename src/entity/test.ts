@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, } from 'typeorm';
-import testPaper from '../entity/testPaper';
+import TestPaper from './TestPaper';
 
 @Entity({ database: "itembank" })
-export default class test {
+export default class Test {
   @PrimaryGeneratedColumn()
   key: number;
 
@@ -10,14 +10,14 @@ export default class test {
   num: number = 0;
 
   @Column()
-  testName: string = null;
+  test_name: string = null;
   
   @Column("longtext")
   test: string;
 
-  @ManyToOne(type => testPaper, paper => paper.tests)
+  @ManyToOne(type => TestPaper, paper => paper.tests)
   @JoinColumn()
-  paper: testPaper[];
+  paper: TestPaper[];
 
   @Column("longtext")
   answer: string;

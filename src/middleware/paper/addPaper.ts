@@ -1,17 +1,17 @@
 import { Context } from 'koa';
 import { getManager } from "typeorm";
-import { paperStatus} from '../../config/types';
-import testPaper from '../../entity/testPaper';
+import { paperStatus } from '../../config/types';
+import TestPaper from '../../entity/TestPaper';
 import nodemail from '../../../sendmail.js';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
+import { PAPER_STATUS, } from '../../config/const';
 // import { loginResponse } from '../../config/class';
 
 export default async (ctx:Context) => {
   console.log(ctx.request.body);
   const req = ctx.request.body;
-  const paperRepository = getManager().getRepository(testPaper);
+  const paperRepository = getManager().getRepository(TestPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
-  const paperNum = req.names && req.names.length ? req.names.length + 1 : 1;
   // 获取日期控件的参数，yyyy-mm-dd 格式
   const timeBegin = req.time[0].slice(0, 10);
   const timeEnd = req.time[1].slice(0, 10);
@@ -37,13 +37,15 @@ export default async (ctx:Context) => {
   let res = null;
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
-    const newPaper = new testPaper();
+    const newPaper = new TestPaper();
     newPaper.paper = req.paper ? req.paper : null;
-    newPaper.check = req.check === 1 ? true : false;
+    newPaper.paper_description = req.paperDescription;
+    // newPaper.paper_point = ;
+    // newPaper.tests_num = 
     newPaper.candidate = req.candidate ? req.candidate : null;
-    newPaper.paperNum = paperNum;
+    newPaper.check = req.check;
+    newPaper.remaining_time = result === true  ? '还剩 ' + (remaining_time - getDays(timeBegin, nowtime)) + ' 天' : PAPER_STATUS ;
     newPaper.time = timeBegin + '~' + timeEnd;
-    newPaper.remaining_time = result === true  ? '还剩' + remaining_time + '天' : '试卷未开放' ;
     await paperRepository.save(newPaper);
     // res = new loginResponse(200)
     res = { msg: '试卷新建成功，并已通过邮件告知候选人相关信息', status: true};

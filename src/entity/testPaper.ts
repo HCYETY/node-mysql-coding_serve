@@ -1,36 +1,36 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, } from 'typeorm';
 import { paperStatus } from '../config/types';
-import test from '../entity/test';
+import Test from './Test';
 
 @Entity({ database: "fieldwork" })
-export default class test_paper {
+export default class TestPaper {
   @PrimaryGeneratedColumn()
   key: number = 0;
 
   @Column()
   paper: string = null;
 
-  @OneToMany(type => test, test => test.paper)
-  tests: test[];
+  @Column("longtext")
+  paper_description: string; 
 
-  @Column("simple-array")
-  tags: string[] = [""];
+  @OneToMany(type => Test, test => test.paper)
+  tests: Test[];
 
   @Column()
-  pass?: number = 0;
+  tests_num: number;
+
+  @Column()
+  paper_point: number;
   
   @Column()
-  time: string = '';
-
-  @Column()
-  paperNum: number = 1;
-
-  @Column()
-  remaining_time: string = '';
-  
-  @Column()
-  check: boolean = false;
+  check: number;
 
   @Column("simple-array")
-  candidate?: string[] = [""];
+  candidate?: string[];
+
+  @Column()
+  time: string;
+
+  @Column()
+  remaining_time: string;
 }

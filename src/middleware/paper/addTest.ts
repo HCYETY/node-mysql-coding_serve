@@ -1,41 +1,49 @@
 import { Context } from 'koa';
-import { getManager } from "typeorm";
-import test from '../../entity/test';
-import test_paper from '../../../src/entity/testPaper';
-import { Console } from 'console';
+import { getManager, createQueryBuilder, } from "typeorm";
+import Test from '../../entity/Test';
+import TestPaper from '../../entity/TestPaper';
 
 export default async (ctx:Context) => {
-  console.log('req is：', ctx.request.body);
-  const request = ctx.request.body;
   // 获取试卷名
-  const paper = request.slice(0, 1);
+  const paperName = ctx.request.body.slice(0, 1);
   // 获取剩余的所有试题
-  const req = request.slice(1);
-  console.log('req1', request)
-  console.log('req2', req)
-  const testRepository = getManager().getRepository(test);
+  const req = ctx.request.body.slice(1);
+  const testRepository = getManager().getRepository(Test);
   const findTest = await testRepository.findOne(
-    { testName: req.testName }, 
+    { test_name: req.testName }, 
     { relations: ["paper"] }
   );
-  const testPaperRepository = getManager().getRepository(test_paper);
-  const testPaper = await testPaperRepository.findOne({ paper: paper });
+  console.log(findTest)
+  const testPaperRepository = getManager().getRepository(TestPaper);
+  const testPaper = await testPaperRepository.findOne({ paper: paperName });
+
+  // const paper = await createQueryBuilder('paper')
+  // .leftJoinAndSelect("paper.tests", "test")
+  // .where("paper.paper = :paper", { paper: "你不懂" })
+  // .andWhere("photo.isRemoved = :isRemoved", { isRemoved: false })
+  // .getRawMany();
+
   if (!findTest) {
     for (let ch of req) {
-      const newTest = new test();
+      const newTest = new Test();
       let testsArr = [];
       newTest.num = ch.num;
-      newTest.testName = ch.testName;
+      newTest.test_name = ch.testName;
       newTest.test = ch.description;
       newTest.answer = ch.answer;
       newTest.level = ch.level;
       newTest.point = ch.point
       newTest.tags = ch.tags;
       await testRepository.save(newTest);
+      console.log(testsArr)
+      console.log(newTest)
+      console.log(testRepository)
       
       // 绑定关联
       testsArr.push(newTest);
+      console.log(testsArr)
       testPaper.tests = testsArr;
+      // testPaper.paper_num = 
       await testPaperRepository.save(testPaper);
     }
 
