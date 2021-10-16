@@ -1,11 +1,22 @@
 import { Context } from 'koa';
-import { getManager, } from "typeorm";
+import { createQueryBuilder, getManager, } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
+import Test from '../../entity/Test';
 import { PAPER_STATUS, } from '../../config/const';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
 
 export default async (ctx:Context) => {
-  const paperRepository = getManager().getRepository(TestPaper)
+  console.log('进来了')
+  const paperRepository = getManager().getRepository(TestPaper);
+  const testReporitory = await getManager().getRepository(Test);
+  const res = await testReporitory.find({ relations: ['paper'] });
+  console.log(res)
+  // .createQueryBuilder(Test, "test")
+  // .leftJoinAndSelect('test.paper', 'tests.paper')
+  // // .where("test.key = :key", { key: 19 })
+  // .getMany();
+  console.log('过来了')
+
   let show;
   if (ctx.request.body.paper) {
     show = await paperRepository.findOne({where: {paper: ctx.request.body.paper}});
@@ -25,5 +36,5 @@ export default async (ctx:Context) => {
     })
   }
 
-  ctx.body = { show }
+  ctx.body = { data: show }
 }

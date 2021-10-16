@@ -1,19 +1,40 @@
 import { Context } from 'koa';
 import { getManager } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
+import Test from '../../entity/Test';
 
 export default async (ctx:Context) => {
-  console.log('删除试卷')
-  console.log(ctx.request.body)
   const paperRepository = getManager().getRepository(TestPaper);
-  for (let num of ctx.request.body) {
-    const deletePaper = await paperRepository.find({where: {paper: num}});
-    await paperRepository.remove(deletePaper);
-    console.log(deletePaper)
+  const testReporitory = getManager().getRepository(Test);
+  
+  for (let ch of ctx.request.body) {
+    const paperKey = (await paperRepository.findOne({ paper: ch.paper })).key;
+    // 先删除带外键的副表的数据
+    const deleteTest = await getManager().getRepository(Test)
+    .createQueryBuilder('test')
+    .leftJoinAndSelect('test.paper', 'papera')
+    .where('test.paper = :paperKey', { paperKey: paperKey })
+    .getMany()
+    console.log(deleteTest);
+    // .delete()
+    // .from(Test)
+    // .where('paper = :paperKey', { paperKey: paperKey })
+    // .execute();
+    // console.log(deleteTest)
+
+    // const deletes = await testReporitory.find( {paper: paperKey})
+    // console.log(deletes)
+
+
+
+    // 然后在删除主表的数据
+    // await paperRepository.delete({ paper: ch.paper });
+
+    // const deletePaper = await paperRepository.findOne({where: {paper: ch.paper}});
+    // await paperRepository.remove(deletePaper);
     console.log('试卷已删除')
   }
   const resPaper = await paperRepository.find();
-  console.log(resPaper)
 
   ctx.body = { msg: '试卷已删除', data: resPaper }
 }

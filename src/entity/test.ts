@@ -17,7 +17,7 @@ export default class Test {
 
   @ManyToOne(type => TestPaper, paper => paper.tests)
   @JoinColumn()
-  paper: TestPaper[];
+  paper: TestPaper;
 
   @Column("longtext")
   answer: string;
