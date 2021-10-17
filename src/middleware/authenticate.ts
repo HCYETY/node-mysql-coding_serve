@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import { getManager } from "typeorm"
 import User from '../entity/User';
+import responseClass from '../config/responseClass';
 
 export default async (ctx:Context, next:any) => {
   // 前端传过来的 cookie
@@ -19,11 +20,9 @@ export default async (ctx:Context, next:any) => {
     await next();
     return;
   } else if (key) {
-    ctx.body = {message:'您处于登录状态，可继续访问网页'};
+    ctx.body = new responseClass(200, '请填写邮箱账号');
     await next();
-    return;
   } else { 
-    ctx.body = {message:'您还未登录！如果您已注册，请先前往登录；如果还未注册，请先注册。'};
-    return;
+    ctx.body = new responseClass(200, '您还未登录！如果您已注册，请先前往登录；如果还未注册，请先注册。');
   }
 }

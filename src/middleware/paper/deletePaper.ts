@@ -2,6 +2,7 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
 import Test from '../../entity/Test';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   const paperRepository = getManager().getRepository(TestPaper);
@@ -36,5 +37,5 @@ export default async (ctx:Context) => {
   }
   const resPaper = await paperRepository.find();
 
-  ctx.body = { msg: '试卷已删除', data: resPaper }
+  ctx.body = new responseClass(200, '试卷已删除', resPaper);
 }

@@ -2,6 +2,7 @@ import { Context } from 'koa';
 import { getManager, createQueryBuilder, } from "typeorm";
 import Test from '../../entity/Test';
 import TestPaper from '../../entity/TestPaper';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   // 获取试卷名
@@ -45,8 +46,8 @@ export default async (ctx:Context) => {
     console.log(testPaper)
     await testPaperRepository.save(testPaper);
   
-    ctx.body = { msg: '试题添加成功', status: true };
+    ctx.body = new responseClass(200, '试题添加成功', { status: true });
   } else {
-    ctx.body = { msg: '试题已存在，无法添加；若想修改试卷信息，请前往修改页面', status: false };
+    ctx.body = new responseClass(200, '试题已存在，无法添加；若想修改试卷信息，请前往修改页面', { status: false });
   }
 }

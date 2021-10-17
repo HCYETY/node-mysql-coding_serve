@@ -2,6 +2,7 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   console.log(ctx.request.body);
@@ -28,5 +29,5 @@ export default async (ctx:Context) => {
   modifyPaper.candidate = req.candidate;
   await paperRepository.save(modifyPaper);
 
-  ctx.body = { msg: '修改试卷成功', status: true }
+  ctx.body = new responseClass(200, '修改试卷成功', { status: true });
 }

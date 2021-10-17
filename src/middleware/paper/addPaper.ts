@@ -5,7 +5,7 @@ import TestPaper from '../../entity/TestPaper';
 import nodemail from '../../../sendmail.js';
 import { nowTime, getDays, dateCompare, } from '../../config/utils';
 import { PAPER_STATUS, } from '../../config/const';
-// import { loginResponse } from '../../config/class';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   console.log(ctx.request.body);
@@ -48,10 +48,8 @@ export default async (ctx:Context) => {
     newPaper.time = timeBegin + '~' + timeEnd;
     await paperRepository.save(newPaper);
     // res = new loginResponse(200)
-    res = { msg: '试卷新建成功，并已通过邮件告知候选人相关信息', status: true};
+    ctx.body = new responseClass(200, '试卷新建成功，并已通过邮件告知候选人相关信息', { status: true });
   } else {
-    res = { msg: '该试卷已存在，请新建试卷', status: false};
+    ctx.body = new responseClass(200, '该试卷已存在，请新建试卷', { status: false });
   }
-
-  ctx.body = res;
 }

@@ -3,9 +3,3 @@ export const paperStatus = {
   ing: '开放中',
   end: '已过期'
 }
-
-export interface loginResponseProps {
-  code: number;
-  message: string;
-  data: object;
-}

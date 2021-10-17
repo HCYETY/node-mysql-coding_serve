@@ -2,13 +2,14 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import { generateMixed } from '../config/utils';
 import User from '../entity/User';
-// import { loginResponse } from '../config/class';
+import responseClass from '../config/responseClass';
 
 export default async (ctx:Context, next:any) => {
   try{
     const { email, cypher } = ctx.request.body; 
     const userRepository = getManager().getRepository(User);
     const saveUsers = await userRepository.findOne({where: {email: email}});
+    const data = { isLogin: false, interviewer: null };
   
     if (saveUsers) {
       if (cypher === saveUsers.cypher) {
@@ -21,14 +22,14 @@ export default async (ctx:Context, next:any) => {
           'session', session, { httpOnly: false, maxAge: 3600000 }
         )
   
-        ctx.body = { message: '登录成功', isLogin: true, identity: saveUsers.interviewer };
+        data.isLogin = true;
+        data.interviewer = saveUsers.interviewer;
+        ctx.body = new responseClass(200, '登录成功', data);
       } else {
-        ctx.body = { message: '邮箱账号或密码错误', isLogin: false };
-        return;
+        ctx.body = new responseClass(200, '邮箱账号或密码错误', data);
       }
     } else {
-      ctx.body = { message: '该邮箱不存在', isLogin: false };
-      return;
+      ctx.body = new responseClass(200, '该邮箱不存在', data);
     }
   } catch{(err: any) => ctx.body = {err}}; 
 }

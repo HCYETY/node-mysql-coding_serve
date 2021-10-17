@@ -1,6 +1,7 @@
 import { Context } from 'koa';
 import { getManager, createQueryBuilder, } from "typeorm";
 import Test from '../../entity/Test';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
@@ -13,5 +14,5 @@ export default async (ctx:Context) => {
   // const showTest = await showTestRepository.findOne({where: {paper: req.paper}});
   // console.log(showTest)
 
-  // ctx.body = { msg: '获取试题成功', data: showTest }
+  // ctx.body = new responseClass(200, '获取试题成功', showTest);
 }
