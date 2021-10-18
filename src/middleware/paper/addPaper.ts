@@ -8,7 +8,6 @@ import { PAPER_STATUS, } from '../../config/const';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  console.log(ctx.request.body);
   const req = ctx.request.body;
   const paperRepository = getManager().getRepository(TestPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
@@ -21,6 +20,7 @@ export default async (ctx:Context) => {
   const result = dateCompare(timeBegin, nowtime);
   // 求出日期之间的天数
   const remaining_time = getDays(timeBegin, timeEnd);
+
   // 根据候选人邮箱发送邮件通知
   if (ctx.request.body.candidate) {
     for (let ret of ctx.request.body.candidate) {
@@ -34,20 +34,17 @@ export default async (ctx:Context) => {
     }
   }
   
-  let res = null;
+
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
     const newPaper = new TestPaper();
     newPaper.paper = req.paper ? req.paper : null;
     newPaper.paper_description = req.paperDescription;
-    // newPaper.paper_point = ;
-    // newPaper.tests_num = 
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.check = req.check;
     newPaper.remaining_time = result === true  ? '还剩 ' + (remaining_time - getDays(timeBegin, nowtime)) + ' 天' : PAPER_STATUS ;
     newPaper.time = timeBegin + '~' + timeEnd;
     await paperRepository.save(newPaper);
-    // res = new loginResponse(200)
     ctx.body = new responseClass(200, '试卷新建成功，并已通过邮件告知候选人相关信息', { status: true });
   } else {
     ctx.body = new responseClass(200, '该试卷已存在，请新建试卷', { status: false });

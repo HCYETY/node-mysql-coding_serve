@@ -12,7 +12,7 @@ import register from './middleware/register';
 import paper from './middleware/paper/showPaper';
 import addPaper from './middleware/paper/addPaper';
 import deletePaper from './middleware/paper/deletePaper';
-import modifyPaper from './middleware/paper/modifyPaper';
+import modifyPaper from './middleware/paper/modify';
 import addTest from './middleware/paper/addTest';
 import showTest from './middleware/paper/showTest';
 

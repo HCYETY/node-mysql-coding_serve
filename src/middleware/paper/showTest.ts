@@ -1,18 +1,19 @@
 import { Context } from 'koa';
-import { getManager, createQueryBuilder, } from "typeorm";
+import { getRepository, } from "typeorm";
 import Test from '../../entity/Test';
 import responseClass from '../../config/responseClass';
+import TestPaper from '../../entity/TestPaper';
 
 export default async (ctx:Context) => {
-  const req = ctx.request.body;
-  console.log(req)
-  // const showTestRepository = getManager().getRepository(Test)
-  // .createQueryBuilder("tests")
-  // .innerJoinAndSelect("tests.paper", "paper", "paper.tests = :tests", { tests: false })
-  // .where("tests.paperKey = :paperKey", { paperKey: 59 })
-  // .getOne()
-  // const showTest = await showTestRepository.findOne({where: {paper: req.paper}});
-  // console.log(showTest)
-
-  // ctx.body = new responseClass(200, '获取试题成功', showTest);
+  const findPaper = ctx.request.body.paper;
+  const paperRepository = getRepository(TestPaper);
+  const paperKey = (await paperRepository.findOne({ paper: findPaper })).key;
+  
+  const show = await getRepository(Test)
+  .createQueryBuilder('test')
+  .leftJoinAndSelect('test.paper', 'paper.tests')
+  .where('test.paper = :paperKey', { paperKey: paperKey })
+  .getMany();
+  
+  ctx.body = new responseClass(200, '获取试题成功', show);
 }

@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { createQueryBuilder, getManager, } from "typeorm";
+import { getRepository, getManager, } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
 import Test from '../../entity/Test';
 import { PAPER_STATUS, } from '../../config/const';
@@ -7,18 +7,19 @@ import { nowTime, getDays, dateCompare, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const paperRepository = getManager().getRepository(TestPaper);
-  const testReporitory = await getManager().getRepository(Test);
-  const res = await testReporitory.find({ relations: ['paper'] });
-  // console.log(res)
-  // .createQueryBuilder(Test, "test")
-  // .leftJoinAndSelect('test.paper', 'tests.paper')
-  // // .where("test.key = :key", { key: 19 })
+  const paperRepository = await getRepository(TestPaper);
+  const testReporitory = await getRepository(Test)
+  // const res = await testReporitory.find({ relations: ['paper'] })
+  // .createQueryBuilder("test")
+  // // .leftJoinAndSelect('test.paper', 'tests.paper')
+  // .where("test.key = :key", { key: 19 })
   // .getMany();
+  // console.log(testReporitory)
 
+  const findPaper = ctx.request.body.paper;
   let show;
-  if (ctx.request.body.paper) {
-    show = await paperRepository.findOne({where: {paper: ctx.request.body.paper}});
+  if (findPaper) {
+    show = await paperRepository.findOne({where: {paper: findPaper}});
   } else {
     show = await paperRepository.find();
     show.map(async (testPaper) => {
