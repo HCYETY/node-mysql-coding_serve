@@ -12,7 +12,7 @@ export function generateMixed (n: number): string {
 
 // 生成 6 位数字的验证码
 export function createSixNum(): string {
-  var Num = "";
+  let Num = "";
   for(let i = 0; i < 6; i++) {
     Num += Math.floor(Math.random() * 10);
   }
