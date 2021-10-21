@@ -9,11 +9,12 @@ import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
+  console.log(req)
   const paperRepository = getManager().getRepository(TestPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
   // 获取日期控件的参数，yyyy-mm-dd 格式
-  const timeBegin = req.time[0].slice(0, 10);
-  const timeEnd = req.time[1].slice(0, 10);
+  const timeBegin = req.timeBegin.slice(0, 10);
+  const timeEnd = req.timeEnd.slice(0, 10);
   // 获取当前时间，yyyy-mm-dd 格式
   const nowtime = nowTime();
   // 比较两个日期的大小
@@ -43,7 +44,9 @@ export default async (ctx:Context) => {
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.check = req.check;
     newPaper.remaining_time = result === true  ? '还剩 ' + (remaining_time - getDays(timeBegin, nowtime)) + ' 天' : PAPER_STATUS ;
-    newPaper.time = timeBegin + '~' + timeEnd;
+    newPaper.time_begin = timeBegin;
+    newPaper.time_end = timeEnd;
+    newPaper.answer_time = req.answerTime;
     await paperRepository.save(newPaper);
     ctx.body = new responseClass(200, '试卷新建成功，并已通过邮件告知候选人相关信息', { status: true });
   } else {

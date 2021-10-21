@@ -17,20 +17,26 @@ export default class TestPaper {
   tests: Test[];
 
   @Column()
-  tests_num: number;
+  tests_num: number = 1;
 
   @Column()
-  paper_point: number;
+  paper_point: number = 0;
   
   @Column()
-  check: number;
+  check: number = 0;
 
   @Column("simple-array")
   candidate?: string[];
 
   @Column()
-  time: string;
+  time_begin: string = null;
 
   @Column()
-  remaining_time: string;
+  time_end: string = null;
+
+  @Column()
+  remaining_time: string = null;
+  
+  @Column()
+  answer_time: string = null;
 }

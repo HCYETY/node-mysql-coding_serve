@@ -9,7 +9,6 @@ export default async (ctx:Context) => {
   const paperName = ctx.request.body.slice(0, 1);
   // 获取剩余的所有试题
   const req = ctx.request.body.slice(1);
-  console.log(req)
 
   const testRepository = getManager().getRepository(Test);
   // 查找试题所属试卷的 key
@@ -21,13 +20,12 @@ export default async (ctx:Context) => {
   .leftJoinAndSelect('test.paper', 'papera')
   .where('test.paperKey = :paperKey', { paperKey: testPaper.key })
   .getMany()
-  console.log(saveTest);
 
   if (saveTest.length === 0) {
     let testsArr = [], paperPoint = 0;
     for (let ch of req) {
       const newTest = new Test();
-      // newTest.num = obj.num;
+      newTest.num = ch.num;
       newTest.test_name = ch.testName;
       newTest.test = ch.description;
       newTest.answer = ch.answer;
@@ -38,12 +36,10 @@ export default async (ctx:Context) => {
       await testRepository.save(newTest);
       testsArr.push(newTest);
     }
-    console.log('全部的试题', testsArr)
     testPaper.tests_num = req.length;
     testPaper.paper_point = paperPoint;
     // 绑定关联
     testPaper.tests = testsArr;
-    console.log(testPaper)
     await testPaperRepository.save(testPaper);
   
     ctx.body = new responseClass(200, '试题添加成功', { status: true });

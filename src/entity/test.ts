@@ -7,10 +7,10 @@ export default class Test {
   key: number;
 
   @Column()
-  num: number = 0;
+  num: string;
 
   @Column()
-  test_name: string = null;
+  test_name: string;
   
   @Column("longtext")
   test: string;
