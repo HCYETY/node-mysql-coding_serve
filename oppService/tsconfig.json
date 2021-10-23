@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",  
-    "module": "commonjs",    
+    "target": "ES2017",  
+    "module": "CommonJS",    
     "sourceMap": true,
     "watch": true,
     "strict": true,              
@@ -10,6 +10,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,  
     "declaration": true,   
+    "noImplicitAny": false, // 防止对象隐式具有'任何'类型
     "forceConsistentCasingInFileNames": true, 
     "strictNullChecks": false,    
     "skipLibCheck": true, 
@@ -24,7 +25,8 @@
   },
   "include": [
     "./src/*",
-    "./ormconfig.js"
+    "./ormconfig.js", 
+    "./Sendmail.js",  
   ],
   "exclude": [
     "./node_modules"

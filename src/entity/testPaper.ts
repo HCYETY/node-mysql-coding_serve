@@ -35,7 +35,7 @@ export default class TestPaper {
   time_end: string = null;
 
   @Column()
-  remaining_time: string = null;
+  remaining_time: boolean = false;
   
   @Column()
   answer_time: string = null;

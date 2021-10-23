@@ -1,29 +1,42 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { paperStatus} from '../config/types';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, } from 'typeorm';
+import { paperStatus } from '../config/types';
+import Test from './Test';
 
-@Entity()
-export default class test_paper {
+@Entity({ database: "fieldwork" })
+export default class TestPaper {
   @PrimaryGeneratedColumn()
-  id: number = 0;
+  key: number = 0;
 
   @Column()
-  paper: string = '';
+  paper: string = null;
+
+  @Column("longtext")
+  paper_description: string; 
+
+  @OneToMany(type => Test, test => test.paper)
+  tests: Test[];
+
+  @Column()
+  tests_num: number = 1;
+
+  @Column()
+  paper_point: number = 0;
+  
+  @Column()
+  check: number = 0;
 
   @Column("simple-array")
-  tags?: string[] = [""];
+  candidate?: string[];
 
   @Column()
-  level: string = '';
-  
-  @Column()
-  pass?: number = 0;
-  
-  @Column()
-  time: string = '';
+  time_begin: string = null;
 
   @Column()
-  paperNum: number = 1;
+  time_end: string = null;
+
+  @Column()
+  remaining_time: boolean = false;
   
   @Column()
-  status: string = paperStatus.nobegin;
+  answer_time: string = null;
 }

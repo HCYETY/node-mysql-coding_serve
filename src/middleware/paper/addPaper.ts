@@ -3,8 +3,7 @@ import { getManager } from "typeorm";
 import { paperStatus } from '../../config/types';
 import TestPaper from '../../entity/TestPaper';
 import nodemail from '../../../sendmail.js';
-import { nowTime, getDays, dateCompare, } from '../../config/utils';
-import { PAPER_STATUS, } from '../../config/const';
+import { nowTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
@@ -17,10 +16,6 @@ export default async (ctx:Context) => {
   const timeEnd = req.timeEnd.slice(0, 10);
   // 获取当前时间，yyyy-mm-dd 格式
   const nowtime = nowTime();
-  // 比较两个日期的大小
-  const result = dateCompare(timeBegin, nowtime);
-  // 求出日期之间的天数
-  const remaining_time = getDays(timeBegin, timeEnd);
 
   // 根据候选人邮箱发送邮件通知
   if (ctx.request.body.candidate) {
@@ -43,7 +38,8 @@ export default async (ctx:Context) => {
     newPaper.paper_description = req.paperDescription;
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.check = req.check;
-    newPaper.remaining_time = result === true  ? '还剩 ' + (remaining_time - getDays(timeBegin, nowtime)) + ' 天' : PAPER_STATUS ;
+    newPaper.remaining_time = (nowtime < timeBegin) ? false : (nowtime > timeEnd) ? false : true;
+
     newPaper.time_begin = timeBegin;
     newPaper.time_end = timeEnd;
     newPaper.answer_time = req.answerTime;
