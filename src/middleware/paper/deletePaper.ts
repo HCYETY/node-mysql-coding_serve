@@ -3,10 +3,12 @@ import { getRepository } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
 import Test from '../../entity/Test';
 import responseClass from '../../config/responseClass';
+import Candidate from '../../../src/entity/Candidate';
 
 export default async (ctx:Context) => {
   const paperRepository = getRepository(TestPaper);
   const testReporitory = getRepository(Test);
+  const candidateReporitory = getRepository(Candidate);
   
   for (let paper of ctx.request.body) {
       const paperKey = (await paperRepository.findOne({ paper: paper })).key;
@@ -21,7 +23,7 @@ export default async (ctx:Context) => {
   
       // 然后再删除主表的数据
       await paperRepository.delete({ paper: paper });
-    
+      await candidateReporitory.delete({ paper: paper });
   }
   const resPaper = await paperRepository.find();
   ctx.body = new responseClass(200, '试卷已删除', resPaper);

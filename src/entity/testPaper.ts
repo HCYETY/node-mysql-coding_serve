@@ -8,6 +8,9 @@ export default class TestPaper {
   key: number = 0;
 
   @Column()
+  interviewer: string = null;
+
+  @Column()
   paper: string = null;
 
   @Column("longtext")
@@ -23,7 +26,7 @@ export default class TestPaper {
   paper_point: number = 0;
   
   @Column()
-  check: number = 0;
+  check: boolean = true;
 
   @Column("simple-array")
   candidate?: string[];

@@ -2,24 +2,23 @@ import { Context } from 'koa';
 import { getManager } from "typeorm";
 import { paperStatus } from '../../config/types';
 import TestPaper from '../../entity/TestPaper';
+import User from '../../entity/User';
 import nodemail from '../../../sendmail.js';
 import { nowTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const req = ctx.request.body;
-  console.log(req)
+  const request = ctx.request.body;
+  const req = request.values;
+  const userRepository = getManager().getRepository(User);
+  const findUser = await userRepository.findOne({where: {session: request.cookie}});
+  const interviewerEmail = findUser.email;
   const paperRepository = getManager().getRepository(TestPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
-  // 获取日期控件的参数，yyyy-mm-dd 格式
-  const timeBegin = req.timeBegin.slice(0, 10);
-  const timeEnd = req.timeEnd.slice(0, 10);
-  // 获取当前时间，yyyy-mm-dd 格式
-  const nowtime = nowTime();
 
   // 根据候选人邮箱发送邮件通知
-  if (ctx.request.body.candidate) {
-    for (let ret of ctx.request.body.candidate) {
+  if (req.candidate) {
+    for (let ret of req.candidate) {
       const mail = {
         from: '1164939253@qq.com',
         to: ret,
@@ -29,17 +28,23 @@ export default async (ctx:Context) => {
       nodemail(mail);
     }
   }
-  
 
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
+    // 获取日期控件的参数，yyyy-mm-dd 格式
+    const timeBegin = req.timeBegin.slice(0, 10);
+    const timeEnd = req.timeEnd.slice(0, 10);
+    // 获取当前时间，yyyy-mm-dd 格式
+    const nowtime = nowTime();
+
     const newPaper = new TestPaper();
+
+    newPaper.interviewer = interviewerEmail;
     newPaper.paper = req.paper ? req.paper : null;
     newPaper.paper_description = req.paperDescription;
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.check = req.check;
     newPaper.remaining_time = (nowtime < timeBegin) ? false : (nowtime > timeEnd) ? false : true;
-
     newPaper.time_begin = timeBegin;
     newPaper.time_end = timeEnd;
     newPaper.answer_time = req.answerTime;
