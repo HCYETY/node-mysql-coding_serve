@@ -18,6 +18,9 @@ export default class Candidate {
   program_answer: string = '';
 
   @Column()
+  time_end: string = null;
+
+  @Column()
   over: boolean = false;
 
   @Column()

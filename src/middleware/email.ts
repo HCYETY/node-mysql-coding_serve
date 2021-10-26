@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import nodemail from '../../sendmail.js';
+import nodemail from '../../sendEmail.js';
 import { createSixNum } from '../config/utils';
 import { getManager } from "typeorm";
 import User from '../entity/User';

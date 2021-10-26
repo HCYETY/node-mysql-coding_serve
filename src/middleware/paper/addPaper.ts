@@ -3,7 +3,7 @@ import { getManager } from "typeorm";
 import { paperStatus } from '../../config/types';
 import TestPaper from '../../entity/TestPaper';
 import User from '../../entity/User';
-import nodemail from '../../../sendmail.js';
+import nodemail from '../../../sendEmail.js';
 import { nowTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 

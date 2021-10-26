@@ -19,6 +19,7 @@ export default async (ctx:Context) => {
   const testPaperRepository = getManager().getRepository(TestPaper);
   const testPaper = await testPaperRepository.findOne({ paper: paperName });
   const testPaperKey = testPaper.key;
+  const timeEnd = testPaper.time_end;
   const testPaperEmail = testPaper.candidate;
   // 根据 key 查找试卷的试题情况
   const saveTest = await getManager().getRepository(Test)
@@ -45,6 +46,7 @@ export default async (ctx:Context) => {
         newCandidate.test_name = ar.testName;
         newCandidate.paper = request.paper;
         newCandidate.watch = request.watch;
+        newCandidate.time_end = timeEnd;
         testsArr.push(newTest);
         console.log(newTest)
         console.log(newCandidate)
