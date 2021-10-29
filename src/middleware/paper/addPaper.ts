@@ -4,7 +4,7 @@ import { paperStatus } from '../../config/types';
 import TestPaper from '../../entity/TestPaper';
 import User from '../../entity/User';
 import nodemail from '../../../sendEmail.js';
-import { nowTime, } from '../../config/utils';
+import { nowTime, transTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
@@ -31,14 +31,15 @@ export default async (ctx:Context) => {
 
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
-    // 获取日期控件的参数，yyyy-mm-dd 格式
-    const timeBegin = req.timeBegin.slice(0, 10);
-    const timeEnd = req.timeEnd.slice(0, 10);
-    // 获取当前时间，yyyy-mm-dd 格式
+    // 获取日期控件的参数，并调用函数转换成 yyyy-mm-dd hh:mm 格式
+    const time1 = req.timeBegin;
+    const timeBegin = transTime(time1);
+    const time2 = req.timeEnd;
+    const timeEnd = transTime(time2);
+    // 获取当前时间，yyyy-mm-dd hh:mm 格式
     const nowtime = nowTime();
 
     const newPaper = new TestPaper();
-
     newPaper.interviewer = interviewerEmail;
     newPaper.paper = req.paper ? req.paper : null;
     newPaper.paper_description = req.paperDescription;

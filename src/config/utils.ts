@@ -19,13 +19,22 @@ export function createSixNum(): string {
   return Num;
 }
 
-// 获取当前时间，yyyy-mm-dd 格式
+// 获取当前时间，yyyy-mm-dd hh:mm 格式
 // 如果某个数字只有一位数，则在前面补 0
 export function nowTime() {
   const now = new Date();
   const year = now.getFullYear();
   const month = (now.getMonth() + 1).toString().padStart(2,'0');
   const day = now.getDate().toString().padStart(2,'0');
-  const nowTime = year + '-' + month + '-' + day;
+  const hours = now.getHours().toString().padStart(2,'0');
+  const minutes = now.getMinutes().toString().padStart(2,'0');
+  const seconds = now.getSeconds();
+  const nowTime = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
   return nowTime;
+}
+// 转化日期控件时间值
+export function transTime(time: string) {
+  const timeDate = new Date(time).toJSON();
+  const getTime = new Date(+new Date(timeDate)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+  return getTime;
 }
