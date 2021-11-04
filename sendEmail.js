@@ -5,7 +5,7 @@ const config = {
   host: 'smtp.qq.com',
   port: 465,
   auth: {
-    user: '1164939253@qq.com',
+    user: 'syandeg@qq.com',
     pass: 'xatmepzzhcxejcee'
   }
 };

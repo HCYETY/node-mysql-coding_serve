@@ -15,7 +15,7 @@ export default async (ctx:Context, next:any) => {
   }
 
   // 若用户请求登录或注册，则可以通过
-  const dontNeedCheck = ['/api/login', '/api/register', '/api/email'];
+  const dontNeedCheck = ['/login', '/register', '/email'];
   if (dontNeedCheck.indexOf(ctx.url) > -1) {
     await next();
     return;

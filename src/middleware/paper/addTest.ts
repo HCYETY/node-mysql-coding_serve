@@ -48,8 +48,6 @@ export default async (ctx:Context) => {
         newCandidate.watch = request.watch;
         newCandidate.time_end = timeEnd;
         testsArr.push(newTest);
-        console.log(newTest)
-        console.log(newCandidate)
         await testRepository.save(newTest);
         await candidateRepository.save(newCandidate);
       }

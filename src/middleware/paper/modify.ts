@@ -2,9 +2,10 @@ import { Context } from 'koa';
 import { getManager, getRepository } from "typeorm";
 import Test from '../../entity/Test';
 import TestPaper from '../../entity/TestPaper';
-import { nowTime, } from '../../config/utils';
+import { nowTime, transTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 import Candidate from '../../../src/entity/Candidate';
+import nodemail from '../../../sendEmail.js';
 
 export default async (ctx:Context) => {
   console.log('修改试卷', ctx.request.body);
@@ -27,33 +28,54 @@ export default async (ctx:Context) => {
 
   // 删除之后，重新添加试题
   let testsArr = [], paperPoint = 0;
+  // 获取日期控件的参数，并调用函数转换成 yyyy-mm-dd hh:mm 格式
+  const time1 = req.timeBegin;
+  const timeBegin = transTime(time1);
+  const time2 = req.timeEnd;
+  const timeEnd = transTime(time2);
+  // 获取当前时间，yyyy-mm-dd hh:mm 格式
+  const nowtime = nowTime();
+
+  // 标识试题存储，防止出现 在试题库中存储多个相同试题但不同候选人 的情况
+  // 试题库只存储唯一试卷唯一试题，即一张试卷多个不同试题
+  let len = req.modifyTests.length;
+  let i = 0;
   for (let ch of req.candidate) {
+    // 考虑到可能新增候选人，所以这里也发送下邮件
+    const mail = {
+      from: '1164939253@qq.com',
+      to: ch,
+      subject: '在线编程笔试平台',
+      text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
+    };
+    // nodemail(mail);
+    
+
     for (let ar of req.modifyTests) {
+      if (i < len) {
+        const newTest = new Test();
+        newTest.num = ar.num;
+        newTest.test_name = ar.testName;
+        newTest.test = ar.description;
+        newTest.answer = ar.answer;
+        newTest.level = ar.level;
+        newTest.point = ar.point;
+        newTest.tags = ar.tags;
+        paperPoint += ar.point;
+        testsArr.push(newTest);
+        i++;
+        await testReporitory.save(newTest);
+      }
       const newCandidate = new Candidate();
-      const newTest = new Test();
-      newTest.num = ar.num;
-      newTest.test_name = ar.testName;
-      newTest.test = ar.description;
-      newTest.answer = ar.answer;
-      newTest.level = ar.level;
-      newTest.point = ar.point;
-      newTest.tags = ar.tags;
-      paperPoint += ar.point;
       newCandidate.email = ch;
       newCandidate.paper = req.oldPaper === req.paper ? req.oldPaper : req.paper;
       newCandidate.test_name = ar.testName;
       newCandidate.watch = req.check;
-      await testReporitory.save(newTest);
+      newCandidate.time_end = timeEnd;
       await candidateReporitory.save(newCandidate);
-      testsArr.push(newTest);
     }
   }
   
-  // 获取日期控件的参数，yyyy-mm-dd 格式
-  const timeBegin = req.timeBegin.slice(0, 10);
-  const timeEnd = req.timeEnd.slice(0, 10);
-  // 获取当前时间，yyyy-mm-dd 格式
-  const nowtime = nowTime();
   modifyPaper.remaining_time = (nowtime < timeBegin) ? false : (nowtime > timeEnd) ? false : true;
   modifyPaper.paper = req.oldPaper === req.paper ? req.oldPaper : req.paper;
   modifyPaper.paper_description = req.paperDescription;

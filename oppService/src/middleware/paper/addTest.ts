@@ -1,40 +1,56 @@
 import { Context } from 'koa';
-import { getManager, createQueryBuilder, } from "typeorm";
+import { getManager, } from "typeorm";
 import Test from '../../entity/Test';
 import TestPaper from '../../entity/TestPaper';
+import Candidate from '../../entity/Candidate';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
+  const request = ctx.request.body;
   // 获取试卷名
-  const paperName = ctx.request.body.slice(0, 1);
-  // 获取剩余的所有试题
-  const req = ctx.request.body.slice(1);
+  const paperName = request.paper;
+  // 获取所有试题
+  const req = request.data;
+  console.log(request)
 
+  const candidateRepository = getManager().getRepository(Candidate);
   const testRepository = getManager().getRepository(Test);
-  // 查找试题所属试卷的 key
+  // 查找试题所属试卷的 key 和 候选人的邮箱
   const testPaperRepository = getManager().getRepository(TestPaper);
   const testPaper = await testPaperRepository.findOne({ paper: paperName });
+  const testPaperKey = testPaper.key;
+  const timeEnd = testPaper.time_end;
+  const testPaperEmail = testPaper.candidate;
   // 根据 key 查找试卷的试题情况
   const saveTest = await getManager().getRepository(Test)
   .createQueryBuilder('test')
   .leftJoinAndSelect('test.paper', 'papera')
-  .where('test.paperKey = :paperKey', { paperKey: testPaper.key })
+  .where('test.paperKey = :paperKey', { paperKey: testPaperKey })
   .getMany()
 
   if (saveTest.length === 0) {
     let testsArr = [], paperPoint = 0;
-    for (let ch of req) {
-      const newTest = new Test();
-      newTest.num = ch.num;
-      newTest.test_name = ch.testName;
-      newTest.test = ch.description;
-      newTest.answer = ch.answer;
-      newTest.level = ch.level;
-      newTest.point = ch.point;
-      newTest.tags = ch.tags;
-      paperPoint += ch.point;
-      await testRepository.save(newTest);
-      testsArr.push(newTest);
+    for (let ch of request.candidateEmail) {
+      for (let ar of req) {
+        const newCandidate = new Candidate();
+        const newTest = new Test();
+        newTest.num = ar.num;
+        newTest.test_name = ar.testName;
+        newTest.test = ar.description;
+        newTest.answer = ar.answer;
+        newTest.level = ar.level;
+        newTest.point = ar.point;
+        newTest.tags = ar.tags;
+        paperPoint += ar.point;
+        newCandidate.email = ch;
+        newCandidate.test_name = ar.testName;
+        newCandidate.paper = request.paper;
+        newCandidate.watch = request.watch;
+        newCandidate.time_end = timeEnd;
+        testsArr.push(newTest);
+        await testRepository.save(newTest);
+        await candidateRepository.save(newCandidate);
+      }
     }
     testPaper.tests_num = req.length;
     testPaper.paper_point = paperPoint;
