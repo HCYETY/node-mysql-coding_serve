@@ -9,7 +9,7 @@
 export default class loginResponse {
   res = {}
 
-  constructor(code: number, msg: string, data?: object) {
+  constructor(code: number, msg: string, data?: any) {
     this.res = {
       code: code,
       msg: msg,

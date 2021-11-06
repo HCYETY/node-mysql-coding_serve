@@ -11,10 +11,10 @@ export default async (ctx:Context) => {
   const paperName = req.paper;
   const testName = req.test;
   const candidateRepository = getRepository(Candidate);
+  const userRepository = getManager().getRepository(User);
   
   // 如果 paperName 存在，要么提交试卷，要么查找试卷
   if (paperName) {
-    const userRepository = getManager().getRepository(User);
     const userInform = await userRepository.findOne({ where: { session: req.cookie }});
     const userEmail = userInform.email;
     const candidateInform = await candidateRepository.find({ where: { email: userEmail, paper: paperName }});
@@ -53,5 +53,15 @@ export default async (ctx:Context) => {
     candidateTest.program_answer = req.code;
     await candidateRepository.save(candidateTest);
     ctx.body = new responseClass(200, '试题答案提交成功', { status: true });
+  } else {  // ctx.request.body 没有任何参数，则是查询所有候选人的邮箱
+    const findUser = await candidateRepository.find();
+    const ret = [];
+    findUser.map(item => {
+      if (ret.indexOf(item.email) === -1) {
+        ret.push(item.email);
+      }
+    })
+    console.log(ret)
+    ctx.body = new responseClass(200, '候选人邮箱获取成功', { ret });
   }
 }

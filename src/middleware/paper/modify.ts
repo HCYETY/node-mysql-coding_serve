@@ -71,7 +71,7 @@ export default async (ctx:Context) => {
       newCandidate.paper = req.oldPaper === req.paper ? req.oldPaper : req.paper;
       newCandidate.test_name = ar.testName;
       newCandidate.watch = req.check;
-      newCandidate.time_end = timeEnd;
+      newCandidate.time_end = req.timeEnd;
       await candidateReporitory.save(newCandidate);
     }
   }
@@ -84,8 +84,8 @@ export default async (ctx:Context) => {
   modifyPaper.candidate = req.candidate;
   modifyPaper.check = req.check;
   modifyPaper.answer_time = req.answerTime;
-  modifyPaper.time_begin = timeBegin;
-  modifyPaper.time_end = timeEnd;
+  modifyPaper.time_begin = req.timeBegin;
+  modifyPaper.time_end = req.timeEnd;
 
   // 绑定关联
   modifyPaper.tests = testsArr;

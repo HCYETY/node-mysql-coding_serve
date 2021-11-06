@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, } from 'typeorm';
 import TestPaper from './TestPaper';
 
-@Entity({ database: "itembank" })
+@Entity({ database: "examydb" })
 export default class Test {
   @PrimaryGeneratedColumn()
   key: number;
