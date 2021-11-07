@@ -9,7 +9,7 @@ export default async (ctx:Context) => {
   const user = await userRepository.findOne({ session: cookie });
   if (user) {
     // 删除 session 字段即可
-    user.session = null;
+    user.session = '';
     await userRepository.save(user);
     ctx.body = new responseClass(200, '已退出登录', { status: true });
   }

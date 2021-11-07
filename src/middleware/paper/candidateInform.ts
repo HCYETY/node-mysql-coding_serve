@@ -18,9 +18,9 @@ export default async (ctx:Context) => {
     const userInform = await userRepository.findOne({ where: { session: req.cookie }});
     const userEmail = userInform.email;
     const candidateInform = await candidateRepository.find({ where: { email: userEmail, paper: paperName }});
+
     // 为 true 说明试卷要提交，先找到提交者邮箱以及提交的试卷：更改试卷的 remaining_time 字段为 false 表明试卷已提交；更改提交者的 over 字段为 true 表明试卷已提交（由于一张试卷不止一道试题，所以每道试题都要更改 over 字段
     if (req.sign === true && req.cookie) {
-      
       for (let ch of candidateInform) {
         ch.over = true;
         await candidateRepository.save(ch);
@@ -39,9 +39,10 @@ export default async (ctx:Context) => {
       nodemail(mail);
       const obj = { status: true, candidateInform };
       ctx.body = new responseClass(200, '试卷已提交，之后不可再编辑', obj);
-    } 
-    const obj = { status: true, candidateInform };
-    ctx.body = new responseClass(200, '试卷信息已查找完毕', obj);
+    } else {
+      const obj = { status: true, candidateInform };
+      ctx.body = new responseClass(200, '试卷信息已查找完毕', obj);
+    }
   } else if (testName) {  // 如果 testName 存在，说明要提交的是一道试题
     // 查找候选人信息中的试题名、邮箱、试卷名，根据这三者确定提交试题的所在
     const candidateInform = await candidateRepository.findOne({ test_name: testName});
@@ -61,7 +62,6 @@ export default async (ctx:Context) => {
         ret.push(item.email);
       }
     })
-    console.log(ret)
     ctx.body = new responseClass(200, '候选人邮箱获取成功', { ret });
   }
 }

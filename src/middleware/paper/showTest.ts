@@ -17,13 +17,12 @@ export default async (ctx:Context) => {
       .leftJoinAndSelect('test.paper', 'paper.tests')
       .where('test.paper = :paperKey', { paperKey: paperKey })
       .getMany();
-    } else if (findTest) {
+  } else if (findTest) {
     show = await getRepository(Test)
-      .createQueryBuilder('test')
-      .leftJoinAndSelect('test.paper', 'paper.tests')
-      .where('test.test_name = :testName', { testName: findTest })
-      .getOne();
+    .createQueryBuilder('test')
+    .leftJoinAndSelect('test.paper', 'paper.tests')
+    .where('test.test_name = :testName', { testName: findTest })
+    .getOne();
   }
-  
-  ctx.body = new responseClass(200, '获取试题成功', show);
+  ctx.body = new responseClass(200, '获取试题成功', { show });
 }

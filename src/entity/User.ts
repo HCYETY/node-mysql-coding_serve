@@ -20,10 +20,10 @@ export default class User {
 	@Column()
 	captcha: string = '';
 
-	// @Column()
-	// nowtime_captcha: string = '';
-	@Column("date", { default: null })
-	nowtime_captcha: Date;
+	// @Column("date", { default: null })
+	// nowtime_captcha: Date;
+	@Column("bigint")
+	nowtime_captcha: number;
 
 	@Column({ default: null })
 	session: string = '';

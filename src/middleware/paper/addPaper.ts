@@ -4,14 +4,12 @@ import { paperStatus } from '../../config/types';
 import TestPaper from '../../entity/TestPaper';
 import User from '../../entity/User';
 import nodemail from '../../../sendEmail.js';
-import { nowTime, transTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const request = ctx.request.body;
-  const req = request.values;
+  const req = ctx.request.body.values;
   const userRepository = getManager().getRepository(User);
-  const findUser = await userRepository.findOne({where: {session: request.cookie}});
+  const findUser = await userRepository.findOne({where: {session: ctx.request.body.cookie}});
   const interviewerEmail = findUser.email;
   const paperRepository = getManager().getRepository(TestPaper);
   const findPaper = await paperRepository.findOne({where: {paper: req.paper}});
@@ -25,20 +23,15 @@ export default async (ctx:Context) => {
         subject: '在线编程笔试平台',
         text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
       };
-      nodemail(mail);
+      // nodemail(mail);
     }
   }
 
   // 查看改试卷是否已经存在于数据库中
   if (!findPaper) {
-    // 获取日期控件的参数，并调用函数转换成 yyyy-mm-dd hh:mm 格式
-    const time1 = req.timeBegin;
-    const timeBegin = transTime(time1);
-    const time2 = req.timeEnd;
-    const timeEnd = transTime(time2);
-    // 获取当前时间，yyyy-mm-dd hh:mm 格式
-    const nowtime = nowTime();
-
+    const timeBegin = new Date(req.timeBegin).getTime();
+    const timeEnd = new Date(req.timeEnd).getTime();
+    const nowtime = new Date().getTime();
     const newPaper = new TestPaper();
     newPaper.interviewer = interviewerEmail;
     newPaper.paper = req.paper ? req.paper : null;
@@ -46,8 +39,8 @@ export default async (ctx:Context) => {
     newPaper.candidate = req.candidate ? req.candidate : null;
     newPaper.check = req.check;
     newPaper.remaining_time = (nowtime < timeBegin) ? false : (nowtime > timeEnd) ? false : true;
-    newPaper.time_begin = req.timeBegin;
-    newPaper.time_end = req.timeEnd;
+    newPaper.time_begin = timeBegin;
+    newPaper.time_end = timeEnd;
     newPaper.answer_time = req.answerTime;
     await paperRepository.save(newPaper);
     ctx.body = new responseClass(200, '试卷新建成功，并已通过邮件告知候选人相关信息', { status: true });

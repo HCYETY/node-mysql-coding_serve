@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import nodemail from '../../sendEmail.js';
-import { createSixNum, nowTime } from '../config/utils';
+import { createSixNum } from '../config/utils';
 import { getManager } from "typeorm";
 import User from '../entity/User';
 import responseClass from '../config/responseClass';
@@ -16,8 +16,8 @@ export default async (ctx:Context) => {
     } else {
       const code = createSixNum();
       const saveUser = await userRepository.findOne({ where: { email }});
-      const nowtime = new Date();
-      console.log(nowtime)
+      const nowtime = new Date().getTime();
+      console.log(nowtime, code)
       const mail = {
         from: '1164939253@qq.com',
         to: email,

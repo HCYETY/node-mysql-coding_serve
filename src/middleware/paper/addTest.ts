@@ -11,7 +11,6 @@ export default async (ctx:Context) => {
   const paperName = request.paper;
   // 获取所有试题
   const req = request.data;
-  console.log(request)
 
   const candidateRepository = getManager().getRepository(Candidate);
   const testRepository = getManager().getRepository(Test);
@@ -19,7 +18,7 @@ export default async (ctx:Context) => {
   const testPaperRepository = getManager().getRepository(TestPaper);
   const testPaper = await testPaperRepository.findOne({ paper: paperName });
   const testPaperKey = testPaper.key;
-  const timeEnd = testPaper.time_end;
+  // const timeEnd = testPaper.time_end;
   const testPaperEmail = testPaper.candidate;
   // 根据 key 查找试卷的试题情况
   const saveTest = await getManager().getRepository(Test)
@@ -46,7 +45,7 @@ export default async (ctx:Context) => {
         newCandidate.test_name = ar.testName;
         newCandidate.paper = request.paper;
         newCandidate.watch = request.watch;
-        newCandidate.time_end = timeEnd;
+        newCandidate.time_end = testPaper.time_end;
         testsArr.push(newTest);
         await testRepository.save(newTest);
         await candidateRepository.save(newCandidate);

@@ -17,8 +17,8 @@ export default class Candidate {
   @Column("longtext")
   program_answer: string = '';
 
-  @Column()
-  time_end: string = null;
+  @Column("bigint")
+  time_end: number = 0;
 
   @Column()
   over: boolean = false;
