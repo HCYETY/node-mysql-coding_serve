@@ -23,7 +23,7 @@ export default async (ctx:Context) => {
         subject: '在线编程笔试平台',
         text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
       };
-      // nodemail(mail);
+      nodemail(mail);
     }
   }
 

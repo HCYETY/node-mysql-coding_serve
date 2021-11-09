@@ -51,7 +51,7 @@ export default async (ctx:Context) => {
       subject: '在线编程笔试平台',
       text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
     };
-    // nodemail(mail);
+    nodemail(mail);
     
 
     for (let ar of req.modifyTests) {
@@ -75,6 +75,7 @@ export default async (ctx:Context) => {
       newCandidate.test_name = ar.testName;
       newCandidate.watch = req.check;
       newCandidate.time_end = timeEnd;
+      newCandidate.test_level = ar.level;
       await candidateReporitory.save(newCandidate);
     }
   }

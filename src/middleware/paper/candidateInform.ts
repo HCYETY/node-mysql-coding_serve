@@ -10,6 +10,7 @@ export default async (ctx:Context) => {
   const req = ctx.request.body;
   const paperName = req.paper;
   const testName = req.test;
+  const cookie = req.cookie;
   const candidateRepository = getRepository(Candidate);
   const userRepository = getManager().getRepository(User);
   
@@ -54,6 +55,12 @@ export default async (ctx:Context) => {
     candidateTest.program_answer = req.code;
     await candidateRepository.save(candidateTest);
     ctx.body = new responseClass(200, '试题答案提交成功', { status: true });
+  } else if (cookie) {
+    const findUserEmail = (await userRepository.findOne({where: { session: cookie }})).email;
+    const ret = await candidateRepository.createQueryBuilder('candidate')
+      .where('candidate.email = :email', { email: findUserEmail })
+      .getMany()
+    ctx.body = new responseClass(200, '候选人邮箱获取成功', { ret });
   } else {  // ctx.request.body 没有任何参数，则是查询所有候选人的邮箱
     const findUser = await candidateRepository.find();
     const ret = [];

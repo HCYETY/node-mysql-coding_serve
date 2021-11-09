@@ -14,6 +14,9 @@ export default class Candidate {
   @Column()
   test_name: string = null;
 
+  @Column()
+  test_level: string = null;
+
   @Column("longtext")
   program_answer: string = '';
 
