@@ -1,3 +1,4 @@
+import { TEST_STATUS } from '../../src/config/const';
 import { Entity, PrimaryGeneratedColumn, Column, } from 'typeorm';
 
 @Entity({ database: "fieldwork" })
@@ -17,14 +18,14 @@ export default class Candidate {
   @Column()
   test_level: string = null;
 
+  @Column()
+  test_status: string = TEST_STATUS.NODO;
+
   @Column("longtext")
   program_answer: string = '';
 
   @Column("bigint")
   time_end: number = 0;
-
-  @Column()
-  over: boolean = false;
 
   @Column()
   watch: boolean = true;
