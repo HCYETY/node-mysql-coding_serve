@@ -10,13 +10,17 @@ import email from './middleware/email';
 import login from './middleware/login';
 import register from './middleware/register';
 import logout from './middleware/logout';
+
 import paper from './middleware/paper/showPaper';
 import addPaper from './middleware/paper/addPaper';
 import deletePaper from './middleware/paper/deletePaper';
-import candidateInform from './middleware/paper/candidateInform';
 import modifyPaper from './middleware/paper/modify';
-import addTest from './middleware/paper/addTest';
-import showTest from './middleware/paper/showTest';
+
+import addTest from './middleware/test/addTest';
+import showTest from './middleware/test/showTest';
+
+import submit from './middleware/candidate/submit';
+import search from './middleware/candidate/search';
 
 createConnections ()
 .then(() => {
@@ -39,13 +43,17 @@ createConnections ()
   router.post('/api/login', login);
   router.post('/api/register', register);
   router.post('/api/logout', logout);
+
   router.post('/api/paper', paper);
   router.post('/api/add_paper', addPaper);
   router.post('/api/delete_paper', deletePaper);
   router.post('/api/modify_paper', modifyPaper);
-  router.post('/api/candidate_inform', candidateInform);
+
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);
+
+  router.post('/api/submit', submit);
+  router.post('/api/search', search);
   // 组装匹配好的路由，返回一个合并好的中间件
   app.use(router.routes());
   
