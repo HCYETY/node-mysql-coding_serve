@@ -29,4 +29,7 @@ export default class Candidate {
 
   @Column()
   watch: boolean = true;
+
+  @Column()
+  look_over: boolean = false;
 }

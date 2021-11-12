@@ -54,15 +54,8 @@ export default async (ctx:Context) => {
     //   ctx.body = new responseClass(200, '候选人邮箱获取成功', { ret });
     // }
   } else {  
-    // ctx.request.body 没有任何参数，则是查询所有候选人的邮箱，在用户“修改试卷信息”中“邀请候选人”搜索时使用
-    const findUser = await candidateRepository.find();
-    const candidateInform = [];
-    findUser.map(item => {
-      // 数组去重
-      if (candidateInform.indexOf(item.email) === -1) {
-        candidateInform.push(item.email);
-      }
-    })
-    ctx.body = new responseClass(200, '候选人邮箱获取成功', { candidateInform });
+    // 若前端请求不懈怠任何参数，则是请求获取所有候选人的试卷信息
+    const show = await candidateRepository.find();
+    ctx.body = new responseClass(200, '所有候选人的试卷信息获取成功', { show });
   }
 }

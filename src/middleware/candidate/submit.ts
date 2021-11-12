@@ -44,7 +44,7 @@ export default async (ctx:Context) => {
       { where: { email, paper, test_name: testName }}
     );
     candidateTest.program_answer = code;
-    status === true ? candidateTest.test_status = TEST_STATUS.DONE : candidateTest.test_status === TEST_STATUS.DOING;
+    candidateTest.test_status = status === true ? TEST_STATUS.DONE : TEST_STATUS.DOING;
     await candidateRepository.save(candidateTest);
     ctx.body = new responseClass(200, '试题答案提交成功', { status: true });
   }
