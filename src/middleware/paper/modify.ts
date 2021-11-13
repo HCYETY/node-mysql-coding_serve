@@ -8,7 +8,6 @@ import nodemail from '../../../sendEmail.js';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
-  console.log(req)
   // 查找试卷
   const paperRepository = getManager().getRepository(TestPaper);
   const testReporitory = getManager().getRepository(Test);
@@ -22,8 +21,8 @@ export default async (ctx:Context) => {
     .leftJoinAndSelect('test.paper', 'paper.tests')
     .where('test.paper = :paperKey', { paperKey: paperKey })
     .getMany();
-  // await testReporitory.remove(deleteTest);
-  // await candidateReporitory.remove(candidatePaper);
+  await testReporitory.remove(deleteTest);
+  await candidateReporitory.remove(candidatePaper);
 
   // 删除之后，重新添加试题
   let testsArr = [], paperPoint = 0;
@@ -43,7 +42,7 @@ export default async (ctx:Context) => {
       subject: '在线编程笔试平台',
       text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
     };
-    // nodemail(mail);
+    nodemail(mail);
     
 
     for (let ar of req.modifyTests) {
@@ -85,7 +84,7 @@ export default async (ctx:Context) => {
 
   // 绑定关联
   modifyPaper.tests = testsArr;
-  // await paperRepository.save(modifyPaper);
+  await paperRepository.save(modifyPaper);
 
-  // ctx.body = new responseClass(200, '修改试卷成功', { status: true });
+  ctx.body = new responseClass(200, '修改试卷成功', { status: true });
 }
