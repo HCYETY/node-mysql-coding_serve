@@ -10,7 +10,9 @@ export default async (ctx:Context, next:any) => {
   const saveUsers = await userRepository.findOne({ where: { email: email }});
   const data = { isLogin: false, interviewer: null };
 
-  if (saveUsers && !cookie) {
+  if ((!saveUsers || !saveUsers.cypher) && !cookie) {
+    ctx.body = new responseClass(200, '你还未注册，请先注册', data);
+  } else if (saveUsers && !cookie) {
     if (cypher === saveUsers.cypher) {
       // 设置20位数的 session 随机数，同时和查找到的用户信息一并存进数据库中
       const session = generateMixed(20)
@@ -33,7 +35,5 @@ export default async (ctx:Context, next:any) => {
       data.isLogin = true;
       ctx.body = new responseClass(200, '你已处于登录状态', data);
     }
-  } else {
-    ctx.body = new responseClass(200, '你还未登录，请先登录', data);
   }
 }

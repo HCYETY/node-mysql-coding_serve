@@ -32,4 +32,7 @@ export default class Candidate {
 
   @Column()
   look_over: boolean = false;
+
+  @Column()
+  score: number = 0;
 }

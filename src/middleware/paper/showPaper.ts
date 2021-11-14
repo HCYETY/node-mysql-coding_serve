@@ -34,6 +34,8 @@ export default async (ctx:Context) => {
           })
           .getMany()
       }
+    } else {
+      show = await paperRepository.find();
     }
   // }
   

@@ -16,14 +16,18 @@ export default async (ctx:Context) => {
   
   // 候选人模块首页要查询该用户所有的试卷信息，以及搜索试卷时会根据条件筛选试卷
   if (paper && cookie) {
-    let candidateInform = null;
+    console.log(email, paper)
+    let ret = null;
     if (paper === '全部试卷') {
-      candidateInform = await candidateRepository.find({ email });
+      ret = await candidateRepository.find({ email });
     } else {
-      candidateInform = await candidateRepository.find({ where: { email, paper }});
+      ret = await candidateRepository.find({ where: { email, paper }});
     }
-    const obj = { status: true, candidateInform };
+    const obj = { status: true, ret };
     ctx.body = new responseClass(200, '所有试卷信息已查找完毕', obj);
+  } else if (paper) {
+    const ret = await candidateRepository.find({ paper });
+    ctx.body = new responseClass(200, '试卷获取完毕', { ret });
   } else if (cookie) {
     let ret = null;
 
@@ -54,8 +58,8 @@ export default async (ctx:Context) => {
     //   ctx.body = new responseClass(200, '候选人邮箱获取成功', { ret });
     // }
   } else {  
-    // 若前端请求不懈怠任何参数，则是请求获取所有候选人的试卷信息
-    const show = await candidateRepository.find();
-    ctx.body = new responseClass(200, '所有候选人的试卷信息获取成功', { show });
+    // 若前端请求不携带任何参数，则是请求获取所有候选人的试卷信息
+    const ret = await candidateRepository.find();
+    ctx.body = new responseClass(200, '所有候选人的试卷信息获取成功', { ret });
   }
 }

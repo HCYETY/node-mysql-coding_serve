@@ -9,14 +9,18 @@ import authenticate from './middleware/authenticate';
 import email from './middleware/email';
 import login from './middleware/login';
 import register from './middleware/register';
-import loginOut from './middleware/loginOut';
+import logout from './middleware/logout';
+
 import paper from './middleware/paper/showPaper';
 import addPaper from './middleware/paper/addPaper';
 import deletePaper from './middleware/paper/deletePaper';
-import candidateInform from './middleware/paper/candidateInform';
 import modifyPaper from './middleware/paper/modify';
-import addTest from './middleware/paper/addTest';
-import showTest from './middleware/paper/showTest';
+
+import addTest from './middleware/test/addTest';
+import showTest from './middleware/test/showTest';
+
+import submit from './middleware/candidate/submit';
+import search from './middleware/candidate/search';
 
 createConnections ()
 .then(() => {
@@ -38,14 +42,18 @@ createConnections ()
   router.post('/api/email', email);
   router.post('/api/login', login);
   router.post('/api/register', register);
-  router.post('/api/login_out', loginOut);
+  router.post('/api/logout', logout);
+
   router.post('/api/paper', paper);
   router.post('/api/add_paper', addPaper);
   router.post('/api/delete_paper', deletePaper);
   router.post('/api/modify_paper', modifyPaper);
-  router.post('/api/candidate_inform', candidateInform);
+
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);
+
+  router.post('/api/submit', submit);
+  router.post('/api/search', search);
   // 组装匹配好的路由，返回一个合并好的中间件
   app.use(router.routes());
   
@@ -54,12 +62,3 @@ createConnections ()
   })
 })
 .catch((error: any) => console.log('TypeOrm连接失败', error))
-
-
-//   location /api/ {
-//     proxy_set_header Host $http_host;
-//     proxy_set_header X-Real-IP $remote_addr;
-//     proxy_set_header REMOTE-HOST $remote_addr;
-//     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-//     proxy_pass http://120.79.193.126:8080;
-// }

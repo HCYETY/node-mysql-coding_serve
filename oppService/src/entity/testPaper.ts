@@ -31,11 +31,11 @@ export default class TestPaper {
   @Column("simple-array")
   candidate?: string[];
 
-  @Column()
-  time_begin: string = null;
+  @Column("bigint")
+  time_begin: number = 0;
 
-  @Column()
-  time_end: string = null;
+  @Column("bigint")
+  time_end: number = 0;
 
   @Column()
   remaining_time: boolean = false;

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, } from 'typeorm';
 import TestPaper from './TestPaper';
 
-@Entity({ database: "examydb" })
+@Entity({ database: "exmydb" })
 export default class Test {
   @PrimaryGeneratedColumn()
   key: number;
@@ -12,17 +12,17 @@ export default class Test {
   @Column()
   test_name: string;
   
-  @Column("longtext")
+  @Column("longtext", { default: null })
   test: string;
 
   @ManyToOne(type => TestPaper, paper => paper.tests)
   @JoinColumn()
   paper: TestPaper;
 
-  @Column("longtext")
+  @Column("longtext", { default: null })
   answer: string;
 
-  @Column("simple-array")
+  @Column("simple-array", { default: null })
   tags: string[];
 
   @Column()

@@ -2,13 +2,11 @@ import { Context } from 'koa';
 import { getManager, getRepository } from "typeorm";
 import Test from '../../entity/Test';
 import TestPaper from '../../entity/TestPaper';
-import { nowTime, transTime, } from '../../config/utils';
 import responseClass from '../../config/responseClass';
 import Candidate from '../../../src/entity/Candidate';
 import nodemail from '../../../sendEmail.js';
 
 export default async (ctx:Context) => {
-  console.log('修改试卷', ctx.request.body);
   const req = ctx.request.body;
   // 查找试卷
   const paperRepository = getManager().getRepository(TestPaper);
@@ -28,13 +26,9 @@ export default async (ctx:Context) => {
 
   // 删除之后，重新添加试题
   let testsArr = [], paperPoint = 0;
-  // 获取日期控件的参数，并调用函数转换成 yyyy-mm-dd hh:mm 格式
-  const time1 = req.timeBegin;
-  const timeBegin = transTime(time1);
-  const time2 = req.timeEnd;
-  const timeEnd = transTime(time2);
-  // 获取当前时间，yyyy-mm-dd hh:mm 格式
-  const nowtime = nowTime();
+  const timeBegin = Number(new Date(req.timeBegin).getTime());
+  const timeEnd = Number(new Date(req.timeEnd).getTime());
+  const nowtime = new Date().getTime();
 
   // 标识试题存储，防止出现 在试题库中存储多个相同试题但不同候选人 的情况
   // 试题库只存储唯一试卷唯一试题，即一张试卷多个不同试题
@@ -48,7 +42,7 @@ export default async (ctx:Context) => {
       subject: '在线编程笔试平台',
       text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
     };
-    // nodemail(mail);
+    nodemail(mail);
     
 
     for (let ar of req.modifyTests) {
@@ -72,6 +66,7 @@ export default async (ctx:Context) => {
       newCandidate.test_name = ar.testName;
       newCandidate.watch = req.check;
       newCandidate.time_end = timeEnd;
+      newCandidate.test_level = ar.level;
       await candidateReporitory.save(newCandidate);
     }
   }
