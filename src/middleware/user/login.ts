@@ -1,8 +1,8 @@
 import { Context } from 'koa';
 import { getManager } from "typeorm";
-import { generateMixed } from '../config/utils';
-import User from '../entity/User';
-import responseClass from '../config/responseClass';
+import { generateMixed } from '../../config/utils';
+import User from '../../entity/User';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context, next:any) => {
   const { email, cypher, cookie } = ctx.request.body; 

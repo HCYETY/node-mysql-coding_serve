@@ -1,9 +1,9 @@
 import { Context } from 'koa';
-import nodemail from '../../sendEmail.js';
-import { createSixNum } from '../config/utils';
+import nodemail from '../../../sendEmail.js';
+import { createSixNum } from '../../config/utils';
 import { getManager } from "typeorm";
-import User from '../entity/User';
-import responseClass from '../config/responseClass';
+import User from '../../entity/User';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   try{

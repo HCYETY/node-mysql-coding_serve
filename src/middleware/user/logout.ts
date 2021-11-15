@@ -1,7 +1,7 @@
 import { Context } from 'koa';
 import { getManager } from "typeorm";
-import User from '../entity/User';
-import responseClass from '../config/responseClass';
+import User from '../../entity/User';
+import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   const cookie = ctx.request.body.cookie;

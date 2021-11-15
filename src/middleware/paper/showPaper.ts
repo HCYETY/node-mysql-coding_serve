@@ -9,35 +9,31 @@ export default async (ctx:Context) => {
   let show = null;
   const paperRepository = getRepository(TestPaper);
   const userRepository = getRepository(User);
-  // // 判断对象为空
-  // const obj = Object.keys(req);
-  // if (obj.length === 0) {
-  //   show = await paperRepository.find();
-  // } else {
-    const findOnePaper = req.paper ? req.paper : undefined;
-    const cookie = req.cookie ? req.cookie : undefined;
-    if (findOnePaper) {
-      show = await paperRepository.findOne({where: { paper: findOnePaper }});
-    } else if (cookie) {
-      const findPaper = await userRepository.findOne({where: { session: cookie }});
-      const findEamilPaper = findPaper.email;
-      if (req.interviewer) {
-        show = await paperRepository.createQueryBuilder('paper')
-          .where('paper.interviewer LIKE :email')
-          .where('paper.interviewer = :interviewer', { interviewer: findEamilPaper })
-          .getMany()
-      } else {
-        show = await paperRepository.createQueryBuilder('paper')
-          .where('paper.candidate LIKE :email')
-          .setParameters({
-            email: '%' + findEamilPaper + '%'
-          })
-          .getMany()
-      }
+  const findOnePaper = req.paper ? req.paper : undefined;
+  const cookie = req.cookie ? req.cookie : undefined;
+  if (findOnePaper) {
+    show = await paperRepository.findOne({where: { paper: findOnePaper }});
+    ctx.body = new responseClass(200, '单独的试卷信息获取成功', show);
+    return;
+  } else if (cookie) {
+    const findPaper = await userRepository.findOne({where: { session: cookie }});
+    const findEamilPaper = findPaper.email;
+    if (req.interviewer) {
+      show = await paperRepository.createQueryBuilder('paper')
+        .where('paper.interviewer LIKE :email')
+        .where('paper.interviewer = :interviewer', { interviewer: findEamilPaper })
+        .getMany()
     } else {
-      show = await paperRepository.find();
+      show = await paperRepository.createQueryBuilder('paper')
+        .where('paper.candidate LIKE :email')
+        .setParameters({
+          email: '%' + findEamilPaper + '%'
+        })
+        .getMany()
     }
-  // }
+  } else {
+    show = await paperRepository.find();
+  }
   
   show.map(async (item) => {
     const nowtime = new Date().getTime();

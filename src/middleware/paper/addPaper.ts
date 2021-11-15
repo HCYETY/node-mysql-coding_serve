@@ -23,7 +23,7 @@ export default async (ctx:Context) => {
         subject: '在线编程笔试平台',
         text:'您收到一位面试官的邀请，可进入该网站 http://www.syandeg.com 查看试卷并填写!'
       };
-      nodemail(mail);
+      // nodemail(mail);
     }
   }
 
@@ -41,7 +41,7 @@ export default async (ctx:Context) => {
     newPaper.remaining_time = (nowtime < timeBegin) ? false : (nowtime > timeEnd) ? false : true;
     newPaper.time_begin = timeBegin;
     newPaper.time_end = timeEnd;
-    newPaper.answer_time = req.answerTime;
+    // newPaper.answer_time = req.answerTime;
     await paperRepository.save(newPaper);
     ctx.body = new responseClass(200, '试卷新建成功，并已通过邮件告知候选人相关信息', { status: true });
   } else {

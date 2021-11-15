@@ -6,10 +6,12 @@ import { createConnections } from "typeorm";
 
 import { ORIGINIP } from './config/const';
 import authenticate from './middleware/authenticate';
-import email from './middleware/email';
-import login from './middleware/login';
-import register from './middleware/register';
-import logout from './middleware/logout';
+import email from './middleware/user/email';
+import login from './middleware/user/login';
+import register from './middleware/user/register';
+import logout from './middleware/user/logout';
+
+import searchCandidate from './middleware/user/searchCandidate';
 
 import paper from './middleware/paper/showPaper';
 import addPaper from './middleware/paper/addPaper';
@@ -44,6 +46,8 @@ createConnections ()
   router.post('/api/login', login);
   router.post('/api/register', register);
   router.post('/api/logout', logout);
+  
+  router.post('/api/search_candidate', searchCandidate);
 
   router.post('/api/paper', paper);
   router.post('/api/add_paper', addPaper);

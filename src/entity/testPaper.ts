@@ -41,5 +41,5 @@ export default class TestPaper {
   remaining_time: boolean = false;
   
   @Column()
-  answer_time: string = null;
+  answer_time: string = '';
 }
