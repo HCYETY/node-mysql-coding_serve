@@ -31,8 +31,5 @@ export default class Candidate {
   watch: boolean = true;
 
   @Column()
-  look_over: boolean = false;
-
-  @Column()
   score: number = 0;
 }

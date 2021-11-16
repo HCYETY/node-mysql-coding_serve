@@ -6,24 +6,25 @@ import { createConnections } from "typeorm";
 
 import { ORIGINIP } from './config/const';
 import authenticate from './middleware/authenticate';
+
 import email from './middleware/user/email';
 import login from './middleware/user/login';
 import register from './middleware/user/register';
 import logout from './middleware/user/logout';
-
 import searchCandidate from './middleware/user/searchCandidate';
 
-import paper from './middleware/paper/showPaper';
-import addPaper from './middleware/paper/addPaper';
-import deletePaper from './middleware/paper/deletePaper';
+import paper from './middleware/paper/show';
+import addPaper from './middleware/paper/add';
+import deletePaper from './middleware/paper/delete';
 import modifyPaper from './middleware/paper/modify';
 import lookOber from './middleware/paper/lookOver';
 
-import addTest from './middleware/test/addTest';
-import showTest from './middleware/test/showTest';
+import addTest from './middleware/test/add';
+import showTest from './middleware/test/show';
 
 import submit from './middleware/candidate/submit';
 import search from './middleware/candidate/search';
+import comment from './middleware/candidate/comment';
 
 createConnections ()
 .then(() => {
@@ -60,6 +61,7 @@ createConnections ()
 
   router.post('/api/submit', submit);
   router.post('/api/search', search);
+  router.post('/api/comment', comment);
   // 组装匹配好的路由，返回一个合并好的中间件
   app.use(router.routes());
   

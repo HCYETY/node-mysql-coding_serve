@@ -6,6 +6,7 @@ import TestPaper from '../../entity/TestPaper';
 import responseClass from '../../config/responseClass';
 import nodemail from '../../../sendEmail.js';
 import { TEST_STATUS } from '../../config/const';
+import LookOver from '../../../src/entity/LookOver';
 
 export default async (ctx:Context) => {
   const { paper, cookie, testName, status, code } = ctx.request.body;
@@ -43,6 +44,15 @@ export default async (ctx:Context) => {
     const candidateTest = await candidateRepository.findOne(
       { where: { email, paper, test_name: testName }}
     );
+    const lookOverRepository = getManager().getRepository(LookOver);
+    const findLookOver = await lookOverRepository.find({where: { email, paper }});
+    if (!findLookOver) {
+      const newLookOver = new LookOver();
+      newLookOver.email = email;
+      newLookOver.paper = paper;
+      newLookOver.join = true;
+      await lookOverRepository.save(newLookOver);
+    }
     candidateTest.program_answer = code;
     candidateTest.test_status = status === true ? TEST_STATUS.DONE : TEST_STATUS.DOING;
     await candidateRepository.save(candidateTest);

@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 import TestPaper from '../../entity/TestPaper';
 import Test from '../../entity/Test';
 import responseClass from '../../config/responseClass';
-import Candidate from '../../../src/entity/Candidate';
+import Candidate from '../../entity/Candidate';
 
 export default async (ctx:Context) => {
   const paperRepository = getRepository(TestPaper);

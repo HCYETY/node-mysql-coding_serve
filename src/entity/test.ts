@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, } from 'typeorm';
 import TestPaper from './TestPaper';
+import Comment from './Comment';
 
 @Entity({ database: "itembank" })
 export default class Test {
@@ -14,6 +15,9 @@ export default class Test {
   
   @Column("longtext", { default: null })
   test: string;
+
+  @OneToMany(type => Comment, comment => comment.tests)
+  comments: Comment[];
 
   @ManyToOne(type => TestPaper, paper => paper.tests)
   @JoinColumn()

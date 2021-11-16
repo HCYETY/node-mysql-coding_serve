@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import Test from "./Test";
 
 @Entity({ database: "fieldwork" })
 export default class Comment {
@@ -10,4 +11,8 @@ export default class Comment {
 
   @Column()
   dislike_num: number = 0;
+
+  @ManyToOne(type => Test, test => test.comments)
+  @JoinColumn()
+  tests: Test;
 }

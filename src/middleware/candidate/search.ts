@@ -8,19 +8,18 @@ import { TEST_LEVEL, TEST_STATUS } from '../../config/const';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
-  const { paper, cookie, testName, filter, test_filter, tag, reqEmail } = req;
+  const { paper, cookie, testName, filter, test_filter, tag, reqEmail, reqPaper } = req;
   const candidateRepository = getRepository(Candidate);
   const userRepository = getManager().getRepository(User);
   const userInform = await userRepository.findOne({ where: { session: cookie }});
   const email = userInform ? userInform.email : undefined;
-  console.log(reqEmail)
+
   // 候选人模块首页要查询该用户所有的试卷信息，以及搜索试卷时会根据条件筛选试卷
-  if (reqEmail) {
-    const ret = await candidateRepository.find({ email: reqEmail });
-    console.log(ret)
+  if (reqEmail && reqPaper) {
+    const ret = await candidateRepository.find({ email: reqEmail, paper: reqPaper });
+    console.log('单个候选人的试卷信息获取成功')
     ctx.body = new responseClass(200, '单个候选人的试卷信息获取成功', { ret });
   } else if (paper && cookie) {
-    console.log(email, paper)
     let ret = null;
     if (paper === '全部试卷') {
       ret = await candidateRepository.find({ email });
@@ -64,7 +63,6 @@ export default async (ctx:Context) => {
   } else {  
     // 若前端请求不携带任何参数，则是请求获取所有候选人的试卷信息
     const ret = await candidateRepository.find();
-    console.log(ret)
     ctx.body = new responseClass(200, '所有候选人的试卷信息获取成功', { ret });
   }
 }

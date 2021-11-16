@@ -5,20 +5,19 @@ import LookOver from '../../entity/LookOver';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const { req } = ctx.request.body;
+  const req = ctx.request.body;
+  const { paper, email, } = req;
   const lookOverRepository = await getManager().getRepository(LookOver);
-  if (req) {
-    const newLookOver = new LookOver();
-    newLookOver.email = req.email;
-    newLookOver.paper = req.paper;
-    newLookOver.total_score = req.total_score;
-    newLookOver.rank = req.rank;
-    newLookOver.use_time = req.use_time;
-    newLookOver.look_over = req.look_over;
-    newLookOver.join = req.join;
-    ctx.body = new responseClass(200, '试卷批阅信息提交成功', { status: true });
-  } else {
-    const ret = await lookOverRepository.find();
+  // if (req) {
+    const findLookOver = await lookOverRepository.find({where: { email, paper }});
+  //   findLookOver.total_score = req.total_score;
+  //   findLookOver.rank = req.rank;
+  //   findLookOver.use_time = req.use_time;
+    // findLookOver.look_over = true;
+  //   ctx.body = new responseClass(200, '试卷批阅信息提交成功', { status: true });
+  // } else if (paper) {
+   if (paper) {
+    const ret = await lookOverRepository.find({ paper, join: true });
     ctx.body = new responseClass(200, '试卷批阅信息查询成功', { status: true, ret });
   }
 }
