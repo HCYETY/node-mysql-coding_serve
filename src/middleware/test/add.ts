@@ -47,6 +47,7 @@ export default async (ctx:Context) => {
         newCandidate.watch = request.watch;
         newCandidate.time_end = testPaper.time_end;
         newCandidate.test_level = ar.level;
+        newCandidate.tags = ar.tags;
         testsArr.push(newTest);
         await testRepository.save(newTest);
         await candidateRepository.save(newCandidate);

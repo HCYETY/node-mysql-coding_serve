@@ -21,6 +21,9 @@ export default class Candidate {
   @Column()
   test_status: string = TEST_STATUS.NODO;
 
+  @Column("simple-array", { default: null })
+  tags: string[];
+
   @Column("longtext")
   program_answer: string = '';
 
