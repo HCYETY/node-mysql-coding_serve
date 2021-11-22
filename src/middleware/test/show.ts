@@ -6,7 +6,6 @@ import TestPaper from '../../entity/TestPaper';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
-  // console.log(req)
   const findPaper = req.paper;
   const findTest = req.test;
   let show = null;
@@ -25,6 +24,5 @@ export default async (ctx:Context) => {
     .where('test.test_name = :testName', { testName: findTest })
     .getOne();
   }
-  // console.log(show)
   ctx.body = new responseClass(200, '获取试题成功', { show });
 }

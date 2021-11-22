@@ -17,7 +17,7 @@ import paper from './middleware/paper/show';
 import addPaper from './middleware/paper/add';
 import deletePaper from './middleware/paper/delete';
 import modifyPaper from './middleware/paper/modify';
-import lookOber from './middleware/paper/lookOver';
+import lookOver from './middleware/paper/lookOver';
 
 import addTest from './middleware/test/add';
 import showTest from './middleware/test/show';
@@ -54,7 +54,7 @@ createConnections ()
   router.post('/api/add_paper', addPaper);
   router.post('/api/delete_paper', deletePaper);
   router.post('/api/modify_paper', modifyPaper);
-  router.post('/api/look_over', lookOber);
+  router.post('/api/look_over', lookOver);
 
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);

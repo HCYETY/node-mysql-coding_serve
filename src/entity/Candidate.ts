@@ -27,12 +27,24 @@ export default class Candidate {
   @Column("longtext")
   program_answer: string = '';
 
+  @Column()
+  program_language: string = '';
+
+  @Column()
+  submit_num: number = 0;
+
+  @Column()
+  score: number = 0;
+
+  @Column("bigint")
+  answer_begin: number = 0;
+
+  @Column("bigint")
+  answer_end: number = 0;
+
   @Column("bigint")
   time_end: number = 0;
 
   @Column()
   watch: boolean = true;
-
-  @Column()
-  score: number = 0;
 }

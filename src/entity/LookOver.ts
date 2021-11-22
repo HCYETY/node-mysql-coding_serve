@@ -18,9 +18,6 @@ export default class LookOver {
   rank: number = 0;
 
   @Column()
-  use_time: number = 0;
-
-  @Column()
   look_over: boolean = false;
 
   @Column()
