@@ -31,6 +31,12 @@ export default class TestPaper {
   @Column("simple-array")
   candidate?: string[];
 
+  @Column()
+  join_num: number = 0;
+
+  @Column()
+  look_over: boolean = false;
+
   @Column("bigint")
   time_begin: number = 0;
 

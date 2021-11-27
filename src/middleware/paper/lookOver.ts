@@ -21,6 +21,6 @@ export default async (ctx:Context) => {
   // } else if (paper) {
    if (paper) {
     const ret = await lookOverRepository.find({ paper, join: true });
-    ctx.body = new responseClass(200, '试卷批阅信息查询成功', { status: true, ret });
+    ctx.body = new responseClass(200, '试卷批阅信息查询成功', { ret });
   }
 }

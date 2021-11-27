@@ -33,8 +33,13 @@ export function createSixNum(): string {
 //   return nowTime;
 // }
 // 转化日期控件时间值
-export function transTime(time: string) {
-  const timeDate = new Date(time).toJSON();
+// export function transTime(time: string) {
+//   const timeDate = new Date(time).toJSON();
+//   const getTime = new Date(+new Date(timeDate)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+//   return getTime;
+// }
+export function transTime(time: number) {
+  const timeDate = new Date(Number(time));
   const getTime = new Date(+new Date(timeDate)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
   return getTime;
 }

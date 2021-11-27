@@ -3,6 +3,8 @@ import { getRepository, getManager, Like} from "typeorm";
 import User from '../../../src/entity/User';
 import TestPaper from '../../entity/TestPaper';
 import responseClass from '../../config/responseClass';
+import { transTime } from '../../../src/config/utils';
+import LookOver from '../../../src/entity/LookOver';
 
 export default async (ctx:Context) => {
   const req = ctx.request.body;
@@ -32,11 +34,17 @@ export default async (ctx:Context) => {
         .getMany()
     }
   } else {
+    const lookOverRepository = getManager().getRepository(LookOver);
+    const findLookOver = await lookOverRepository.find();
     show = await paperRepository.find();
   }
   
   show.map(async (item) => {
     const nowtime = new Date().getTime();
+    // const timeBegin = Number(item.time_begin);
+    // const timeEnd = Number(item.time_end);
+    // item.time_begin = transTime(item.time_begin);
+    // item.time_end = transTime(item.time_end);
     item.remaining_time = (nowtime < item.time_begin) ? false : (nowtime > item.time_end) ? false : true;
     await paperRepository.save(item);
   })

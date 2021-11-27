@@ -18,6 +18,7 @@ import addPaper from './middleware/paper/add';
 import deletePaper from './middleware/paper/delete';
 import modifyPaper from './middleware/paper/modify';
 import lookOver from './middleware/paper/lookOver';
+import communicate from './middleware/candidate/communicate';
 
 import addTest from './middleware/test/add';
 import showTest from './middleware/test/show';
@@ -42,6 +43,8 @@ createConnections ()
   app.use(bodyParser());
   // 根据登录状态设置登录拦截
   router.use(authenticate);
+  // router.use(communicate);
+  // router.post('/api/communicate', communicate);
   // 匹配接口
   router.post('/api/email', email);
   router.post('/api/login', login);
@@ -50,11 +53,16 @@ createConnections ()
   
   router.post('/api/search_candidate', searchCandidate);
 
+  // 面试题管理
   router.post('/api/paper', paper);
   router.post('/api/add_paper', addPaper);
   router.post('/api/delete_paper', deletePaper);
   router.post('/api/modify_paper', modifyPaper);
+  // 阅卷管理
   router.post('/api/look_over', lookOver);
+  // 面试间
+  // router.post('/api/communicate', communicate);
+  // router.use(communicate);
 
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);

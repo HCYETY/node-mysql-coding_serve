@@ -5,16 +5,19 @@ import User from '../../entity/User';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const { paper, cookie } = ctx.request.body;
+  const { paper, cookie, reqEmail } = ctx.request.body;
   const candidateRepository = getRepository(Candidate);
   const userRepository = getManager().getRepository(User);
   const userInform = await userRepository.findOne({ where: { session: cookie }});
-  const email = userInform ? userInform.email : undefined;
+  let email = userInform ? userInform.email : undefined;
 
   // 候选人模块首页要查询该用户所有的试卷信息，以及搜索试卷时会根据条件筛选试卷
-  if (paper && cookie) {
+  if ((paper && cookie) || (paper && reqEmail)) {
+    if (reqEmail) {
+      email = reqEmail;
+    }
     const ret = await candidateRepository.find({ where: { email, paper }});
-    ctx.body = new responseClass(200, '所有试卷信息已查找完毕', { ret });
+    ctx.body = new responseClass(200, '指定试卷信息已查找完毕', { ret });
   } else if (paper) {
     const ret = await candidateRepository.find({ paper });
     ctx.body = new responseClass(200, '试卷获取完毕', { ret });

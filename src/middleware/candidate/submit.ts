@@ -9,7 +9,7 @@ import { TEST_STATUS } from '../../config/const';
 import LookOver from '../../../src/entity/LookOver';
 
 export default async (ctx:Context) => {
-  const { paper, cookie, submit, testName, status, code, programLanguage, } = ctx.request.body;
+  const { paper, cookie, submit, testName, status, code, language, } = ctx.request.body;
   const candidateRepository = getManager().getRepository(Candidate);
   const userRepository = getManager().getRepository(User);
   const userInform = await userRepository.findOne({ where: { session: cookie }});
@@ -47,20 +47,24 @@ export default async (ctx:Context) => {
     // submit 为 true 说明候选人提交了代码，否则则说明候选人刚开始参与答题
     if (submit === true) {
       candidateTest.program_answer = code;
-      candidateTest.program_language = programLanguage;
-      candidateTest.submit_num = candidateTest.submit_num++;
+      candidateTest.program_language = language;
+      candidateTest.submit_num++;
       candidateTest.answer_end = nowtime;
       candidateTest.test_status = status === true ? TEST_STATUS.DONE : TEST_STATUS.DOING;
       await candidateRepository.save(candidateTest);
       ctx.body = new responseClass(200, '试题答案提交成功', { status: true });
     } else {
+      const paperRepository = getManager().getRepository(TestPaper);
+      const findPaper = await paperRepository.findOne({ paper });
       const newLookOver = new LookOver();
       newLookOver.email = email;
       newLookOver.paper = paper;
       newLookOver.join = true;
       candidateTest.answer_begin = nowtime;
+      findPaper.join_num++; 
       await lookOverRepository.save(newLookOver);
       await candidateRepository.save(candidateTest);
+      await paperRepository.save(findPaper);
       ctx.body = new responseClass(200, '阅卷的试题信息初始化完毕', { status: true });
     }
   }
