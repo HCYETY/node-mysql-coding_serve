@@ -11,14 +11,13 @@ import email from './middleware/user/email';
 import login from './middleware/user/login';
 import register from './middleware/user/register';
 import logout from './middleware/user/logout';
-import searchCandidate from './middleware/user/searchCandidate';
+import searchEmail from './middleware/user/searchEmail';
 
 import paper from './middleware/paper/show';
 import addPaper from './middleware/paper/add';
 import deletePaper from './middleware/paper/delete';
 import modifyPaper from './middleware/paper/modify';
 import lookOver from './middleware/paper/lookOver';
-import communicate from './middleware/candidate/communicate';
 
 import addTest from './middleware/test/add';
 import showTest from './middleware/test/show';
@@ -26,6 +25,10 @@ import showTest from './middleware/test/show';
 import submit from './middleware/candidate/submit';
 import search from './middleware/candidate/search';
 import comment from './middleware/candidate/comment';
+
+import communicate from './middleware/candidate/communicate';
+import createInterview from './middleware/interview/create';
+import findInterview from './middleware/interview/find';
 
 createConnections ()
 .then(() => {
@@ -51,9 +54,9 @@ createConnections ()
   router.post('/api/register', register);
   router.post('/api/logout', logout);
   
-  router.post('/api/search_candidate', searchCandidate);
+  router.post('/api/search_email', searchEmail);
 
-  // 面试题管理
+  // 试题管理
   router.post('/api/paper', paper);
   router.post('/api/add_paper', addPaper);
   router.post('/api/delete_paper', deletePaper);
@@ -61,8 +64,10 @@ createConnections ()
   // 阅卷管理
   router.post('/api/look_over', lookOver);
   // 面试间
-  // router.post('/api/communicate', communicate);
   // router.use(communicate);
+  // router.post('/api/communicate', communicate);
+  router.post('/api/create_interview', createInterview);
+  router.post('/api/find_interview', findInterview);
 
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);
