@@ -22,4 +22,10 @@ export default class Interview {
 
   @Column()
   candidate_link: string = null;
+
+  @Column()
+  evaluation: string = null;
+  
+  @Column()
+  comment: string = null;
 }

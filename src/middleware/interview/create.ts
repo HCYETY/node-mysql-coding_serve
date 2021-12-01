@@ -6,15 +6,15 @@ import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
   const { inform, } = ctx.request.body;
-  const { interviewer, candidate, interview_begin_time, linkPath, } = inform;
+  const { interviewer, candidate, interview_begin_time, } = inform;
   const interviewRepository = getManager().getRepository(Interview);
   const newInterview = new Interview();
   const roomNum = createSixNum();
   newInterview.interviewer = interviewer;
   newInterview.candidate = candidate;
   newInterview.interview_room = roomNum;
-  newInterview.candidate_link = createInterviewLink({ interviewer: true, roomNum, linkPath });
-  newInterview.interviewer_link = createInterviewLink({ interviewer: false, roomNum, linkPath });
+  newInterview.candidate_link = createInterviewLink({ interviewer: true, roomNum });
+  newInterview.interviewer_link = createInterviewLink({ interviewer: false, roomNum });
   newInterview.interview_begin_time = new Date(interview_begin_time).getTime();
   console.log(newInterview)
   await interviewRepository.save(newInterview);

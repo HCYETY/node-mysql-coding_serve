@@ -26,14 +26,23 @@ import submit from './middleware/candidate/submit';
 import search from './middleware/candidate/search';
 import comment from './middleware/candidate/comment';
 
-import communicate from './middleware/candidate/communicate';
 import createInterview from './middleware/interview/create';
 import findInterview from './middleware/interview/find';
+import submitInterview from './middleware/interview/submit';
+import WebSocketApi from './middleware/candidate/websocket';
+import http from 'http';
+import WebSocket from 'ws';
 
 createConnections ()
 .then(() => {
   const app = new Koa();
   const router = new Router(); 
+  // const server = http.createServer(app.callback());
+  // const WebSocketApi = require('./middleware/candidate/websocket');
+  // const wss = new WebSocket.Server({// 同一个端口监听不同的服务
+  //   server
+  // });
+  // WebSocketApi(wss);
   
   // 处理cookie跨域
   const corsOptions ={
@@ -46,8 +55,7 @@ createConnections ()
   app.use(bodyParser());
   // 根据登录状态设置登录拦截
   router.use(authenticate);
-  // router.use(communicate);
-  // router.post('/api/communicate', communicate);
+  // router.use(WebSocketApi);
   // 匹配接口
   router.post('/api/email', email);
   router.post('/api/login', login);
@@ -64,10 +72,10 @@ createConnections ()
   // 阅卷管理
   router.post('/api/look_over', lookOver);
   // 面试间
-  // router.use(communicate);
-  // router.post('/api/communicate', communicate);
+  router.all('/koa/ws', WebSocketApi);
   router.post('/api/create_interview', createInterview);
   router.post('/api/find_interview', findInterview);
+  router.post('/api/submit_interview', submitInterview);
 
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);
@@ -77,6 +85,7 @@ createConnections ()
   router.post('/api/comment', comment);
   // 组装匹配好的路由，返回一个合并好的中间件
   app.use(router.routes());
+  // app.use(WebSocketApi);
   
   app.listen(8080, () => {
     console.log('网站服务器启动成功，请访问 http://120.79.193.126:8080');

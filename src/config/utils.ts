@@ -20,18 +20,28 @@ export function createSixNum(): number {
 }
 
 // 根据不同身份（面试官和候选人）生成不同的面试间的链接
-export function createInterviewLink(data: { interviewer: boolean, roomNum: number, linkPath: string }): string {
-  const { interviewer, roomNum, linkPath } = data;
-  let link: string = linkPath;
+export function createInterviewLink(data: { interviewer: boolean, roomNum: number }): string {
+  const { interviewer, roomNum } = data;
+  let link: string = null;
   if (interviewer === true) {
-    link += `/interview/${ roomNum }/interviewer?code=${ generateMixed(3) }`;
+    link = `/interview/${ roomNum }/interviewer?code=${ generateMixed(3) }`;
   } else {
-    link += `/interview/${ roomNum }/candidate?code=${ generateMixed(3) }`;
+    link = `/interview/${ roomNum }/candidate?code=${ generateMixed(3) }`;
   }
   return link;
 }
 
-export function nowTime(): number {
+// 获取当前时间戳：毫秒格式 或者 hh:mm:ss格式
+// 不带参数是毫秒格式，否则为 hh:mm:ss 格式
+export function nowTime(data?: { click: boolean }): number | string {
+  if (data.click && data.click === true) {
+    const time = new Date();
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+    const second = time.getSeconds();
+    const timer = hour + ':' + minute + ':' + second + ' ';
+    return timer;
+  }
   const time = new Date().getTime();
   return time;
 }
