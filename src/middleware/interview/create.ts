@@ -13,8 +13,8 @@ export default async (ctx:Context) => {
   newInterview.interviewer = interviewer;
   newInterview.candidate = candidate;
   newInterview.interview_room = roomNum;
-  newInterview.candidate_link = createInterviewLink({ interviewer: true, roomNum });
-  newInterview.interviewer_link = createInterviewLink({ interviewer: false, roomNum });
+  newInterview.candidate_link = createInterviewLink({ interviewer: false, roomNum });
+  newInterview.interviewer_link = createInterviewLink({ interviewer: true, roomNum });
   newInterview.interview_begin_time = new Date(interview_begin_time).getTime();
   console.log(newInterview)
   await interviewRepository.save(newInterview);

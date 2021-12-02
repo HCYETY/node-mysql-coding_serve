@@ -1,48 +1,42 @@
-// module.exports = wss => {
-//   wss.on('connection', function connection(ws) {
-//     ws.on('message', function incoming(message) {
-//       console.log('received: %s', message);
-//     });
-//     ws.send('something');
-//   });
-// }
-
 import { Context } from 'koa';
-import { nowTime, } from '../../config/utils';
-import Ws from 'ws';
+import WebSocket from 'ws';
+import { v4 as uuidv4 } from 'uuid';
+import { nowTime } from '../../config/utils';
 
-export default async (ctx: Context) => {
-  const host = '120.79.193.126:9090';
-  const server = new Ws.Server({ port: 9090 });
-  
-  server.on('connection', function connection(ws, req) {
-    console.log('connection')
-    if (ws.readyState == Ws.CONNECTING) {
-      console.log('ws.readyState == Ws.CONNECTING',ws.readyState)
-      console.log('ws.readyState == Ws.CONNECTING',Ws.CONNECTING)
-      ws.send('正在连接服务器');
-    }
-    // const ip = req.connection.remoteAddress;
-    // const port = req.connection.remotePort;
-    // const clientName = ip + port;
-  
-    // 接收客户端发来的消息
+export default (ctx: Context) => {
+  const wss = new WebSocket.Server({ port: 8888 });
+  let saveMsg = [];
+  if (wss.readyState === WebSocket.CONNECTING) {
+    wss.send('正在连接服务器...');
+  }
+  if (wss.readyState === WebSocket.OPEN) {
+    wss.send('您已连接到服务器');
+  }
+
+  wss.on('connection', function connection(ws, req) {
+    const nowtime = nowTime({ click: true });
+    const id = uuidv4();
+    const retMsg = { 
+      time: nowtime, 
+      identity: '系统', 
+      msg: '已进入xxx号房间', 
+      // client_uuid: id 
+    };
+    saveMsg.push(retMsg);
+    console.log(saveMsg)
+    ws.send(JSON.stringify(saveMsg));
     ws.on('message', function incoming(message) {
-      const nowtime = nowTime({ click: true });
       // 广播消息给所有客户端
-      server.clients.forEach(function each(client) {
-        if (client.readyState === Ws.OPEN) {
-          client.send(nowtime + message);
-          // client.send( clientName + " -> " + message);
-        }
+      wss.clients.forEach(function each(client) {
+        console.log(message)
+        const msg = { time: nowtime, msg: message };
+        retMsg.identity = null;
+        retMsg.msg = message.inputInform;
+        saveMsg.push(retMsg)
+        client.send(JSON.stringify(saveMsg));
       });
   
     });
   
   });
-  
-  
-  // server.on('error', function error(event) {
-  //   server.send('服务器出错了', event);
-  // });
 }
