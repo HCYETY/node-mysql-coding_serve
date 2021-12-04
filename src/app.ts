@@ -49,16 +49,21 @@ createConnections ()
 .then(async () => {
   const app = new Koa();
   const router = new Router(); 
-  // router.use(WebSocketApi);
 
   const wss = new WebSocket.Server({ port: 8888 });
   let clients = [];
-  let retMsg = [];
+  let talkMsg = [], codeMsg = [];
 
-  function wsSend(data: { time: any, identity: string, msg: string, id?: string, name?: string }) {
-    let { time, identity, msg, id, name } = data;
-    retMsg.push({ time, identity, msg, id, name });
-    const len = retMsg.length;
+  function wsSend(data: { code?: string, isEditor?: boolean, time?: any, identity?: string, msg?: string, id?: string, name?: string }) {
+    const { time, identity, msg, id, name, code, isEditor } = data;
+    let retMsg = null;
+    if (code !== undefined && isEditor !== undefined) {
+      codeMsg.push({ code, isEditor });
+      retMsg = codeMsg;
+    } else {
+      talkMsg.push({ time, identity, msg, id, name });
+      retMsg = talkMsg;
+    }  
     //遍历客户端
     for (var i = 0; i < clients.length; i++) {
       //声明客户端
@@ -72,15 +77,16 @@ createConnections ()
   
   wss.on('connection', async function connection(ws, req) {
     if (ws.readyState === WebSocket.OPEN) {
-      const time = nowTime({ click: true });
-      const identity = '系统';
-      const msg = '您已连接到服务器';
-      retMsg.push({ time, identity, msg })
-      ws.send(JSON.stringify(retMsg));
+      const obj = {
+        time: nowTime({ click: true }),
+        identity: '系统',
+        msg: '您已连接到服务器',
+      }
+      ws.send(JSON.stringify([obj]));
     }
 
     ws.on('message', function incoming(message) {
-      const { inputInform, id, interviewIdentity, cookie } = JSON.parse(message);
+      const { inputInform, id, interviewIdentity, cookie, code, isEditor } = JSON.parse(message);
       if (inputInform && id) {
         const time = nowTime({ click: true });
         const identity = interviewIdentity;
@@ -92,9 +98,10 @@ createConnections ()
         const msg = `已进入xxx号房间`;
         const id = cookie;
         const name = interviewIdentity;
-        console.log('name', interviewIdentity)
         clients.push({ id: cookie, ws });
         wsSend({ time, identity, msg, id, name });
+      } else if (code) {
+        wsSend({ code, isEditor });
       }
     });
   });
