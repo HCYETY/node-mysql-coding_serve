@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, } from 'typeorm';
 
-@Entity({ database: "fieldwork" })
+@Entity({ database: "alimydb" })
 export default class Interview {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,7 +9,7 @@ export default class Interview {
   interviewer: string[];
 
   @Column()
-  candidate: string = null;
+  candidate: string = '';
 
   @Column()
   interview_room: number = 0;
@@ -18,14 +18,14 @@ export default class Interview {
   interview_begin_time: number = 0;
 
   @Column()
-  interviewer_link: string = null;
+  interviewer_link: string = '';
 
   @Column()
-  candidate_link: string = null;
+  candidate_link: string = '';
 
   @Column()
-  evaluation: string = null;
+  evaluation: string = '';
   
   @Column()
-  comment: string = null;
+  comment: string = '';
 }

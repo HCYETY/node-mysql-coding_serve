@@ -20,7 +20,7 @@ export default async (ctx:Context, next:any) => {
     const saveUser = await userRepository.findOne({where: {session: cookie}});
     // var key = saveUser ? saveUser.session : false;
     if (saveUser) {
-      next();
+      await next();
       return;
     }
   } else { 

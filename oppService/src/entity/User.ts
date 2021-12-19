@@ -18,7 +18,7 @@ export default class User {
 	cypher: string = '';
 
 	@Column()
-	captcha: string = '';
+	captcha: number = 0;
 
 	// @Column("date", { default: null })
 	// nowtime_captcha: Date;

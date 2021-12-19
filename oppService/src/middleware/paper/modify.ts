@@ -26,8 +26,8 @@ export default async (ctx:Context) => {
 
   // 删除之后，重新添加试题
   let testsArr = [], paperPoint = 0;
-  const timeBegin = Number(new Date(req.timeBegin).getTime());
-  const timeEnd = Number(new Date(req.timeEnd).getTime());
+  const timeBegin = new Date(req.timeBegin).getTime();
+  const timeEnd = new Date(req.timeEnd).getTime();
   const nowtime = new Date().getTime();
 
   // 标识试题存储，防止出现 在试题库中存储多个相同试题但不同候选人 的情况

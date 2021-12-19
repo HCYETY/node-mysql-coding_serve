@@ -1,7 +1,7 @@
 import { TEST_STATUS } from '../../src/config/const';
 import { Entity, PrimaryGeneratedColumn, Column, } from 'typeorm';
 
-@Entity({ database: "fieldwork" })
+@Entity({ database: "alimydb" })
 export default class Candidate {
   @PrimaryGeneratedColumn()
   id: number;

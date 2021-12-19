@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity({ database: "fieldwork" })
+@Entity({ database: "alimydb" })
 export default class User {
 	@PrimaryGeneratedColumn()
 	key: number = 0;

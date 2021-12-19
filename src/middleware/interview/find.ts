@@ -4,9 +4,12 @@ import Interview from '../../entity/Interview';
 import responseClass from '../../config/responseClass';
 
 export default async (ctx:Context) => {
-  const { findArr } = ctx.request.body;
+  const { interviewer, findArr } = ctx.request.body;
   const interviewRepository = getManager().getRepository(Interview);
-  if (findArr) {
+  if (interviewer) {
+    const findInterviewInfrom = await interviewRepository.find({ interviewer });
+    ctx.body = new responseClass(200, '该面试官的面试间信息查询成功', { ret: findInterviewInfrom });
+  } else if (findArr) {
     const { interviewer, interview_room, interviewer_link } = findArr;
     const findInterviewer = await interviewRepository.findOne({ interviewer, interview_room, interviewer_link });
     if (findInterviewer) {

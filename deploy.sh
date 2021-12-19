@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 先关闭之前的服务，安装依赖之后再重启
-pm2 stop src/app.ts
+pm2 stop src/app.ts --interpreter ./node_modules/.bin/ts-node
 
 # 查看文件中是否已经包含 node_modules ，如果有则先删除
 # file='node_modules'
@@ -20,4 +20,4 @@ if [ -n "$pid" ]; then
 fi
 
 # 启动 pm2
-pm2 start ./src/app.ts
+pm2 start ./src/app.ts --interpreter ./node_modules/.bin/ts-node
