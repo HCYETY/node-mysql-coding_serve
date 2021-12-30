@@ -7,29 +7,26 @@ import { transTime } from '../../../src/config/utils';
 import LookOver from '../../../src/entity/LookOver';
 
 export default async (ctx:Context) => {
-  const req = ctx.request.body;
-  let show = null;
+  const { paper, cookie, interviewer, } = ctx.request.body;
   const paperRepository = getRepository(TestPaper);
   const userRepository = getRepository(User);
-  const findOnePaper = req.paper ? req.paper : undefined;
-  const cookie = req.cookie ? req.cookie : undefined;
-  if (findOnePaper) {
-    show = await paperRepository.findOne({where: { paper: findOnePaper }});
+  let show = null;
+  if (paper) {
+    show = await paperRepository.findOne({where: { paper }});
     ctx.body = new responseClass(200, '单独的试卷信息获取成功', show);
     return;
   } else if (cookie) {
-    const findPaper = await userRepository.findOne({where: { session: cookie }});
-    const findEamilPaper = findPaper.email;
-    if (req.interviewer) {
+    const findEamil = (await userRepository.findOne({ session: cookie })).email;
+    if (interviewer) {
       show = await paperRepository.createQueryBuilder('paper')
         .where('paper.interviewer LIKE :email')
-        .where('paper.interviewer = :interviewer', { interviewer: findEamilPaper })
+        .where('paper.interviewer = :interviewer', { interviewer: findEamil })
         .getMany()
     } else {
       show = await paperRepository.createQueryBuilder('paper')
         .where('paper.candidate LIKE :email')
         .setParameters({
-          email: '%' + findEamilPaper + '%'
+          email: '%' + findEamil + '%'
         })
         .getMany()
     }

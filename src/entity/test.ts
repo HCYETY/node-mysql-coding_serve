@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import TestPaper from './TestPaper';
 import Comment from './Comment';
 
-@Entity({ database: "examydb" })
+@Entity({ database: "itembank" })
 export default class Test {
   @PrimaryGeneratedColumn()
   key: number;

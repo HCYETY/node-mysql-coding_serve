@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity({ database: "alimydb" })
+@Entity({ database: "fieldwork" })
 export default class LookOver {
 	@PrimaryGeneratedColumn()
 	key: number = 0;
@@ -22,4 +22,7 @@ export default class LookOver {
 
   @Column()
   join: boolean = false;
+
+  @Column("bigint")
+  use_time: number = 0;
 }

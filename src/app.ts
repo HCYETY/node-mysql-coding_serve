@@ -5,7 +5,7 @@ import cors from 'koa2-cors';
 import websockify from 'koa-websocket';
 import { createConnections } from "typeorm";
 
-import { ORIGINIP } from './config/const';
+import { ORIGINIP, WS_TYPE } from './config/const';
 import authenticate from './middleware/authenticate';
 
 import email from './middleware/user/email';
@@ -30,6 +30,8 @@ import comment from './middleware/candidate/comment';
 import createInterview from './middleware/interview/create';
 import findInterview from './middleware/interview/find';
 import submitInterview from './middleware/interview/submit';
+import deleteInterview from './middleware/interview/delete';
+
 import { nowTime } from './config/utils';
 import WebSocketApi from './middleware/candidate/websocket';
 import WebSocket from 'ws';
@@ -53,20 +55,34 @@ createConnections ()
 
   const wss = new WebSocket.Server({ port: 9090 });
   let clients = [];
-  let talkMsg = [], codeMsg = [], count = 0;
+  let codeMsg = [];
 
-  function wsSend(data: { candidate?: string, code?: string, cookie?: string, time?: any, identity?: string, msg?: string, id?: string, name?: string }) {
-    const { time, identity, msg, id, name, code, cookie, candidate } = data;
+  function wsSend(data: any) {
+  // function wsSend(data: { showVideo?: boolean, canVideo?: boolean, code?: string, cookie?: string, time?: any, identity?: string, msg?: string, id?: string, name?: string }) {
     let retMsg = null;
-    if (code !== undefined) {
-      codeMsg.push({ code, cookie, time });
-      retMsg = codeMsg;
-      codeMsg = [];
-    } else if (candidate !== undefined && id !== undefined) {
-      retMsg = { candidate, id };
-    } else {
-      talkMsg.push({ time, identity, msg, id, name });
-      retMsg = talkMsg;
+    switch(data.type) {
+      // case WS_TYPE.CONNECT:
+      // case WS_TYPE.TALK:
+        // talkMsg.push(data);
+        // retMsg = talkMsg;
+        // retMsg = data;
+        // break;
+      case WS_TYPE.CODE:
+        codeMsg.push(data);
+        retMsg = codeMsg;
+        codeMsg = [];
+        break;
+      case WS_TYPE.CONNECT:
+      case WS_TYPE.TALK:
+      case WS_TYPE.REQ_VIDEO:
+      case WS_TYPE.RES_VIDEO:
+      case WS_TYPE.VIDEO_OFFER:
+      case WS_TYPE.VIDEO_ANSWER:
+      case WS_TYPE.NEW_ICE_CANDIDATE:
+        retMsg = data;
+        break;
+      default:
+        return;
     }
     //遍历客户端
     for (var i = 0; i < clients.length; i++) {
@@ -78,6 +94,7 @@ createConnections ()
       }
     }
   }
+
   
   wss.on('connection', async function connection(ws, req) {
     if (ws.readyState === WebSocket.OPEN) {
@@ -85,63 +102,82 @@ createConnections ()
         time: nowTime({ click: true }),
         identity: '系统',
         msg: '您已连接到服务器',
+        type: WS_TYPE.CONNECT
       }
-      ws.send(JSON.stringify([obj]));
+      ws.send(JSON.stringify(obj));
     }
 
-    ws.on('message', function incoming(message: any) {
-      // console.log(JSON.parse(message))
-      const { inputInform, id, interviewIdentity, operation, cookie, code, time, candidate, } = JSON.parse(message);
-      // const { inputInform, id, interviewIdentity, operation, cookie, code, time, candidate, } = JSON.parse(message);
-      if (candidate) {
-        wsSend({ candidate });
-      } else if (inputInform && id) {
-        const time = nowTime({ click: true });
-        const identity = interviewIdentity;
-        const msg = inputInform;
-        wsSend({ time, identity, msg, id });
-      } else if (cookie  && time) {
-        // // Both users start with the same document
-        // var str = "lorem ipsum";
+    ws.on('message', function incoming(messages: any) {
+      const { type, operation, cookie, time } = JSON.parse(messages);
+      const message = JSON.parse(messages);
+      switch (type) {
+        case WS_TYPE.CONNECT:
+          {
+            message.time = nowTime({ click: true });
+            message.name = message.identity;
+            message.identity = '系统';
+            message.msg = `已进入xxx号房间`;
+            message.id = cookie;
+            clients.push({ id: cookie, ws });
+            wsSend(message);
+            break;
+          }
+        case WS_TYPE.TALK:
+          {
+            message.time = nowTime({ click: true });
+            wsSend(message);
+            break;
+          }
+        case WS_TYPE.REQ_VIDEO:
+        case WS_TYPE.RES_VIDEO:
+        case WS_TYPE.VIDEO_OFFER:
+        case WS_TYPE.VIDEO_ANSWER:
+        case WS_TYPE.NEW_ICE_CANDIDATE:
+          {
+            wsSend(message);
+            break;
+          }
+        case WS_TYPE.CODE:
+          // // Both users start with the same document
+          // var str = "lorem ipsum";
 
-        // // User A appends the string " dolor"
-        // var operationA = new TextOperation()
-        //   .retain(11)
-        //   .insert(" dolor");
-        // var strA = operationA.apply(str); // "lorem ipsum dolor"
+          // // User A appends the string " dolor"
+          // var operationA = new TextOperation()
+          //   .retain(11)
+          //   .insert(" dolor");
+          // var strA = operationA.apply(str); // "lorem ipsum dolor"
 
-        // // User B deletes the string "lorem " at the beginning
-        // var operationB = new TextOperation()
-        //   .delete("lorem ")
-        //   .retain(5);
-        // var strB = operationB.apply(str); // "ipsum";
+          // // User B deletes the string "lorem " at the beginning
+          // var operationB = new TextOperation()
+          //   .delete("lorem ")
+          //   .retain(5);
+          // var strB = operationB.apply(str); // "ipsum";
 
-        // var transformedPair = TextOperation.transform(operationA, operationB);
-        // var operationAPrime = transformedPair[0];
-        // var operationBPrime = transformedPair[1];
+          // var transformedPair = TextOperation.transform(operationA, operationB);
+          // var operationAPrime = transformedPair[0];
+          // var operationBPrime = transformedPair[1];
 
-        // var strABPrime = operationAPrime.apply(strB); // "ipsum dolor"
-        // var strBAPrime = operationBPrime.apply(strA); // "ipsum dolor"
-        // // console.log('operationBPrime', operationBPrime)
-        // // console.log('operationBPrime', operationBPrime)
+          // var strABPrime = operationAPrime.apply(strB); // "ipsum dolor"
+          // var strBAPrime = operationBPrime.apply(strA); // "ipsum dolor"
+          // // console.log('operationBPrime', operationBPrime)
+          // // console.log('operationBPrime', operationBPrime)
 
 
-        // const retCode = operationA.apply(code);
-        console.log(operation, cookie, time)
-        // const sss = operation.fromJSON()
-        // console.log('sss', sss)
-        // wsSend({ code, cookie, time });
-      } else if (cookie) {
-        const time = nowTime({ click: true });
-        const identity = '系统';
-        const msg = `已进入xxx号房间`;
-        const id = cookie;
-        const name = interviewIdentity;
-        clients.push({ id: cookie, ws });
-        wsSend({ time, identity, msg, id, name });
+          // const retCode = operationA.apply(code);
+          console.log(operation, cookie, time)
+          // const sss = operation.fromJSON()
+          // console.log('sss', sss)
+          // wsSend({ code, cookie, time });
+        default:
+          return;
       }
     });
   });
+
+
+
+
+
 
   // 处理cookie跨域
   const corsOptions ={
@@ -175,6 +211,7 @@ createConnections ()
   router.post('/api/create_interview', createInterview);
   router.post('/api/find_interview', findInterview);
   router.post('/api/submit_interview', submitInterview);
+  router.post('/api/delete_interview', deleteInterview);
 
   router.post('/api/add_test', addTest);
   router.post('/api/show_test', showTest);

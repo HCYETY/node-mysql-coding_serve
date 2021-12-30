@@ -7,6 +7,7 @@ import responseClass from '../../config/responseClass';
 import nodemail from '../../../sendEmail.js';
 import { TEST_STATUS } from '../../config/const';
 import LookOver from '../../../src/entity/LookOver';
+import { nowTime } from 'src/config/utils';
 
 export default async (ctx:Context) => {
   const { paper, cookie, submit, testName, status, code, language, } = ctx.request.body;
@@ -55,14 +56,17 @@ export default async (ctx:Context) => {
       ctx.body = new responseClass(200, '试题答案提交成功', { status: true });
     } else {
       const paperRepository = getManager().getRepository(TestPaper);
+      const findLookOver = await lookOverRepository.findOne({ email, paper });
       const findPaper = await paperRepository.findOne({ paper });
-      const newLookOver = new LookOver();
-      newLookOver.email = email;
-      newLookOver.paper = paper;
-      newLookOver.join = true;
+      findPaper.join_num++;
       candidateTest.answer_begin = nowtime;
-      findPaper.join_num++; 
-      await lookOverRepository.save(newLookOver);
+      if (!findLookOver) {
+        const newLookOver = new LookOver();
+        newLookOver.email = email;
+        newLookOver.paper = paper;
+        newLookOver.join = true;
+        await lookOverRepository.save(newLookOver);
+      } 
       await candidateRepository.save(candidateTest);
       await paperRepository.save(findPaper);
       ctx.body = new responseClass(200, '阅卷的试题信息初始化完毕', { status: true });

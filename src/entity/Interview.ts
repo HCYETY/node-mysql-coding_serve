@@ -1,6 +1,7 @@
+import { INTERVIEW_STATUS } from '../config/const';
 import { Entity, PrimaryGeneratedColumn, Column, } from 'typeorm';
 
-@Entity({ database: "alimydb" })
+@Entity({ database: "fieldwork" })
 export default class Interview {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,6 +23,9 @@ export default class Interview {
 
   @Column()
   candidate_link: string = '';
+
+  @Column()
+  interview_status: string = INTERVIEW_STATUS.NO;
 
   @Column()
   evaluation: string = '';

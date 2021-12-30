@@ -8,20 +8,19 @@ import Candidate from '../../../src/entity/Candidate';
 import TestPaper from '../../../src/entity/TestPaper';
 
 export default async (ctx:Context) => {
-  const req = ctx.request.body;
-  const { paper, cookie, rate, reqEmail, } = req;
+  const { paper, cookie, rate, reqEmail, } = ctx.request.body;
   const userRepository = getManager().getRepository(User);
   const candidateRepository = getManager().getRepository(Candidate);
   const lookOverRepository = getManager().getRepository(LookOver);
   const testPaperRepository = getManager().getRepository(TestPaper);
   const userInform = await userRepository.findOne({ where: { session: cookie }});
   const email = userInform ? userInform.email : reqEmail;
-  if (Array.isArray(req)) {
+  if (paper && cookie && reqEmail) {
     const findCandidate = await candidateRepository.find({ paper, email });
     const findLookOver = await lookOverRepository.findOne({ paper, email });
     const findTestPaper = await testPaperRepository.findOne({ paper, candidate: email });
     let totalScore = 0;
-    req.map(async item => {
+    rate.map(async item => {
       const saveCandidate = findCandidate.find(tmp => tmp.test_name === item.testName);
       totalScore += item.score;
       saveCandidate.score = item.score;

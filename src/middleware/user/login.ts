@@ -31,8 +31,10 @@ export default async (ctx:Context, next:any) => {
     }
   } else if (!saveUsers && cookie) {
     const findCookieUser = await userRepository.findOne({ where: { session: cookie }});
+    const identity = findCookieUser.interviewer;
     if (findCookieUser) {
       data.isLogin = true;
+      data.interviewer = identity;
       ctx.body = new responseClass(200, '你已处于登录状态', data);
     }
   }

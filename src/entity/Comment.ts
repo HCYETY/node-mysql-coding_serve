@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import Test from "./Test";
 
-@Entity({ database: "alimydb" })
+@Entity({ database: "fieldwork" })
 export default class Comment {
 	@PrimaryGeneratedColumn()
 	key: number = 0;

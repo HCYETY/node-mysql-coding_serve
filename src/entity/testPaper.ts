@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, } from 'typeorm';
 import { paperStatus } from '../config/types';
 import Test from './Test';
 
-@Entity({ database: "alimydb" })
+@Entity({ database: "fieldwork" })
 export default class TestPaper {
   @PrimaryGeneratedColumn()
   key: number = 0;
