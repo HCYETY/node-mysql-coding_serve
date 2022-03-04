@@ -1,4 +1,4 @@
-export const ORIGINIP: string = 'http://120.79.193.126';
+export const ORIGINIP: string = 'http://www.syandeg.com';
 
 // 试题状态
 export enum TEST_STATUS {

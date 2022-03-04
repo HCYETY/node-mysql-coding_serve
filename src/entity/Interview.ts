@@ -1,7 +1,7 @@
 import { INTERVIEW_STATUS } from '../config/const';
 import { Entity, PrimaryGeneratedColumn, Column, } from 'typeorm';
 
-@Entity({ database: "fieldwork" })
+@Entity({ database: "alimydb" })
 export default class Interview {
   @PrimaryGeneratedColumn()
   id: number;

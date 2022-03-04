@@ -11,12 +11,14 @@ export default async (ctx:Context) => {
   if (paper) {
     const paperRepository = getRepository(TestPaper);
     const paperKey = (await paperRepository.findOne({ paper })).key;
+    console.log(paperKey)
+    
     show = await getRepository(Test)
       .createQueryBuilder('test')
       .leftJoinAndSelect('test.paper', 'paper.tests')
-      .where('test.paper = :paperKey', { paperKey: paperKey })
+      .where('test.paper = :paperKey', { paperKey })
       .getMany();
-      console.log(show)
+      console.log('ddd', show)
   } else if (test) {
     show = await getRepository(Test)
     .createQueryBuilder('test')

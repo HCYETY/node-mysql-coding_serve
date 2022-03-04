@@ -1,3 +1,84 @@
+## 后端表设计
+1. 用户表
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|account|账号|varchar|
+|password|账号密码|varchar|
+|email|邮箱|varchar|
+|cypher|邮箱密码|varchar|
+|captcha|验证码|varchar|
+|session|20位的随机数|varchar|
+|interviewer|用户身份|tinyint|
+|nowtime_captcha|发送验证码的当前时间|bigint|
+
+2. 试卷表
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|candidate|候选人邮箱|数组|
+|paper|试卷名称|varchar|
+|paper_description|试卷描述|longtext|
+|tests_num|试题量|int|
+|paper_point|试卷分数|int|
+|time_begin|试卷开放时间|bigint|
+|time_end|试卷截止时间|bigint|
+|answer_time|试卷作答时长|varchar|
+|remaining_time|试卷剩余作答时间|tinyint|
+|check|可否查看试卷|tinyint|
+|interviewer|面试官邮箱|varchar|
+
+3. 试题表（单独放在另一个数据库里）
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|num|试题序号|varchar|
+|test_name|试题名称|varchar|
+|test|试题内容|longtext|
+|answer|试题答案|longtext|
+|tags|试题标签|text|
+|level|试题难度|varchar|
+|point|试题分数|int|
+|paperKey|绑定试卷 id|int|
+
+4. 候选人表
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|email|候选人邮箱|varchar|
+|paper|受邀的试卷名称|varchar|
+|test_name|试卷中的试题名称|varchar|
+|program_answer|填写的试题代码|longtext|
+|time_end|试卷截止时间|bigint|
+|test_level|试题难度|varchar|
+|test_status|试题作答状态|varchar|
+|watch|试卷提交后可否查看|tinyint|
+|look_over|试卷是否批阅|tinyint|
+|score|面试官批阅后给的分数|int|
+
+5. 面试官批阅表
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|email|候选人邮箱|varchar|
+|paper|候选人试卷|varchar|
+|total_score|试卷总分|int|
+|rank|排名|int|
+|look_over|试卷是否批阅|tinyint|
+|join|候选人是否参与答卷|tinyint|
+
+6. 留言表【绑定候选人表】
+
+|字段|字段描述|字段类型|
+|:--:|:--:|:--:|
+|email|用户邮箱|varchar|
+|like_num|点赞数|int|
+|dislike_num|倒彩数|int|
+|comtents|评论|longtext|
+|order|回复的评论的key|int|
+|tests|绑定试题| |
+
+
 ## 项目模板的目录结构：
 ```js
 ├── .gitignore

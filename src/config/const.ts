@@ -1,4 +1,4 @@
-export const ORIGINIP: string = 'http://localhost:3000';
+export const ORIGINIP: string = 'http://www.syandeg.com';
 
 // 试题状态
 export enum TEST_STATUS {
